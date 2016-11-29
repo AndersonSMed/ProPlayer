@@ -22,9 +22,10 @@ public final class Mp3Player implements Runnable {
     private AdvancedPlayer ap;
     private Thread thread_t;
     private static Mp3Player singleton;
+    private boolean playing;
 
     private Mp3Player() {
-        
+
     }
 
     public static Mp3Player getInstance() {
@@ -45,14 +46,15 @@ public final class Mp3Player implements Runnable {
 
     public void start(File music) throws InterruptedException, FileNotFoundException, JavaLayerException {
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(music));
-        if(thread_t != null){
-            if(thread_t.isAlive()) {
+        if (thread_t != null) {
+            if (thread_t.isAlive()) {
                 this.ap.close();
             }
         }
         this.ap = new AdvancedPlayer(bis);
         thread_t = new Thread(this, "mp3Player");
         thread_t.start();
+        this.playing = true;
     }
 
     public void stop() {
@@ -61,16 +63,13 @@ public final class Mp3Player implements Runnable {
 
     }
 
-    public void pause() {
-        try {
-            this.ap.wait();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+    public void playPause() {
+        if (this.playing) {
+            this.thread_t.suspend();
+        } else {
+            this.thread_t.resume();
         }
-    }
-
-    public void play() {
-        this.ap.notify();
+        this.playing = !this.playing;
     }
 
     public Thread getThread_t() {

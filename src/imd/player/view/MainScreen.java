@@ -1,6 +1,7 @@
 package imd.player.view;
 
 import imd.player.model.Mp3Player;
+import imd.player.model.MusicDAO;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,14 +10,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javazoom.jl.decoder.JavaLayerException;
 
 public class MainScreen extends javax.swing.JFrame {
+
     private JFileChooser jfc;
+    private FileNameExtensionFilter fl;
+    private MusicDAO musicdao;
     
     public MainScreen() {
         initComponents();
-        
+
+        fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
         jfc = new JFileChooser();
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
-        
+        musicdao = new MusicDAO();
     }
 
     /**
@@ -68,6 +73,11 @@ public class MainScreen extends javax.swing.JFrame {
         btnForward.setText("Forward");
 
         btnPlay.setText("Play");
+        btnPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlayActionPerformed(evt);
+            }
+        });
 
         lblMusicName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMusicName.setText("Music0.0");
@@ -263,34 +273,33 @@ public class MainScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenFileActionPerformed
-        FileNameExtensionFilter fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
-        jfc.addChoosableFileFilter(fl);
+        jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        if (jfc.getFileFilter() != fl) {
+            jfc.addChoosableFileFilter(fl);
+        }
         jfc.showDialog(this, "Open");
-        if(jfc.getSelectedFile() != null){
-        try {
+        if (jfc.getSelectedFile() != null) {
             try {
                 Mp3Player.getInstance().start(jfc.getSelectedFile());
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JavaLayerException ex) {
-                Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-       }
     }//GEN-LAST:event_menuOpenFileActionPerformed
 
     private void menuOpenDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenDirectoryActionPerformed
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
         jfc.showDialog(this, "Open");
-        
     }//GEN-LAST:event_menuOpenDirectoryActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
+        Mp3Player.getInstance().playPause();
+    }//GEN-LAST:event_btnPlayActionPerformed
 
     /**
      * @param args the command line arguments
