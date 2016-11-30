@@ -1,20 +1,18 @@
 package imd.player.view;
 
-import imd.player.model.Mp3Player;
 import imd.player.model.MusicDAO;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javazoom.jl.decoder.JavaLayerException;
 
 public class MainScreen extends javax.swing.JFrame {
 
     private JFileChooser jfc;
     private FileNameExtensionFilter fl;
     private MusicDAO musicdao;
-    
+    private ArrayList<File> playlist;
+
     public MainScreen() {
         initComponents();
 
@@ -22,6 +20,7 @@ public class MainScreen extends javax.swing.JFrame {
         jfc = new JFileChooser();
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
         musicdao = new MusicDAO();
+        playlist = new ArrayList<>();
     }
 
     /**
@@ -69,10 +68,20 @@ public class MainScreen extends javax.swing.JFrame {
         setResizable(false);
 
         btnBack.setText("Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnForward.setText("Forward");
+        btnForward.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnForwardActionPerformed(evt);
+            }
+        });
 
-        btnPlay.setText("Play");
+        btnPlay.setText("Pause");
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlayActionPerformed(evt);
@@ -279,18 +288,19 @@ public class MainScreen extends javax.swing.JFrame {
         }
         jfc.showDialog(this, "Open");
         if (jfc.getSelectedFile() != null) {
-            try {
-                Mp3Player.getInstance().start(jfc.getSelectedFile());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.playlist.add(jfc.getSelectedFile());
         }
     }//GEN-LAST:event_menuOpenFileActionPerformed
 
     private void menuOpenDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenDirectoryActionPerformed
-        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jfc.removeChoosableFileFilter(jfc.getFileFilter());
-        jfc.showDialog(this, "Open");
+        try {
+            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            jfc.removeChoosableFileFilter(jfc.getFileFilter());
+            //jfc.showDialog(this, "Open");
+            musicdao.playMusics(this.playlist);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_menuOpenDirectoryActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -298,8 +308,20 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        Mp3Player.getInstance().playPause();
+        if (musicdao.pausePlayMusic()) {
+            btnPlay.setText("Play");
+        } else {
+            btnPlay.setText("Pause");
+        }
     }//GEN-LAST:event_btnPlayActionPerformed
+
+    private void btnForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForwardActionPerformed
+        musicdao.nextMusic();
+    }//GEN-LAST:event_btnForwardActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        musicdao.backMusic();
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments

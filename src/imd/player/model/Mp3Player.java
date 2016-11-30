@@ -22,7 +22,7 @@ public final class Mp3Player implements Runnable {
     private AdvancedPlayer ap;
     private Thread thread_t;
     private static Mp3Player singleton;
-    private boolean playing;
+    private boolean playing = false;
 
     private Mp3Player() {
 
@@ -64,16 +64,22 @@ public final class Mp3Player implements Runnable {
     }
 
     public void playPause() {
-        if (this.playing) {
-            this.thread_t.suspend();
-        } else {
-            this.thread_t.resume();
+        if (this.thread_t != null && this.thread_t.isAlive()) {
+            if (this.playing) {
+                this.thread_t.suspend();
+            } else {
+                this.thread_t.resume();
+            }
+            this.playing = !this.playing;
         }
-        this.playing = !this.playing;
     }
 
     public Thread getThread_t() {
         return thread_t;
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 
 }

@@ -12,20 +12,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class FileManager {
+
     private final File folders = new File("/home/anderson/Documents/Diretorios.txt");
     private File musicFile;
     private Path playlistFolder;
     private File userFile;
-    
-    public FileManager() throws FileNotFoundException, IOException{
+
+    public FileManager() throws FileNotFoundException, IOException {
         BufferedReader bufferReader = new BufferedReader(new FileReader(folders));
         this.musicFile = new File(bufferReader.readLine());
         this.playlistFolder = Paths.get(bufferReader.readLine());
@@ -55,11 +52,10 @@ public class FileManager {
     public void setUserFile(File userFile) {
         this.userFile = userFile;
     }
-    
-    public void insertUser(User user) throws IOException{
+
+    public void insertUser(User user) throws IOException {
         FileWriter writer = new FileWriter(userFile, true);
-        
-        
+
     }
-     
+
 }
