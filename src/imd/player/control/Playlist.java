@@ -6,14 +6,14 @@ import java.util.ArrayList;
 public class Playlist {
 
     private String name;
-    private ArrayList<File> musics;
+    private ArrayList<Music> musics;
 
     public Playlist(String name) {
         this.name = name;
         this.musics = new ArrayList<>();
     }
 
-    public Playlist(String name, ArrayList<File> musics) {
+    public Playlist(String name, ArrayList<Music> musics) {
         this.name = name;
         this.musics = musics;
     }
@@ -26,11 +26,11 @@ public class Playlist {
         this.name = name;
     }
 
-    public ArrayList<File> getMusics() {
+    public ArrayList<Music> getMusics() {
         return musics;
     }
 
-    public void addMusic(File music) {
+    public void addMusic(Music music) {
         this.musics.add(music);
     }
 

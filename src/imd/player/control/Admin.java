@@ -1,6 +1,5 @@
 package imd.player.control;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class Admin extends User{
@@ -30,11 +29,11 @@ public class Admin extends User{
         }
     }
     
-    public void addToPlaylists(String name, ArrayList<File> fileList){
+    public void addToPlaylists(String name, ArrayList<Music> fileList){
         playlists.add(new Playlist(name, fileList));
     }
     
-    public void addToPlayLists (String name, File musicFile, String playlistName){
+    public void addToPlayLists (String name, Music musicFile, String playlistName){
         boolean isInserted = false;
         boolean playlistInserted = false;
         
@@ -42,7 +41,7 @@ public class Admin extends User{
             if(pl.getName() == playlistName){
                 playlistInserted = true;
                 
-                for(File music : pl.getMusics()){
+                for(Music music : pl.getMusics()){
                     
                     if(music == musicFile){
                         isInserted = true;

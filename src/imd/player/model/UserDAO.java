@@ -14,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +63,7 @@ public class UserDAO {
     
     
     public void saveBackup (){
-        ArrayList<User> userList = new ArrayList<User>();
+        ArrayList<User> userList = new ArrayList<>();
         try {
             FileWriter writer = new FileWriter(userFile, false);
             userTree.enlistTreeElements(userList);
