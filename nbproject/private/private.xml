@@ -5,13 +5,12 @@
         <group>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/Facade.java</file>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/User.java</file>
-            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/PlayListDao.java</file>
-            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/view/LoginScreen.java</file>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/MusicDao.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/Music.java</file>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/UserDAO.java</file>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/Admin.java</file>
-            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/Playlist.java</file>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/MusicControl.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/view/MainScreen.java</file>
             <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/DAO.java</file>
         </group>
     </open-files>
