@@ -13,6 +13,11 @@ public class Playlist {
         this.musics = new ArrayList<>();
     }
 
+    public Playlist(String name, ArrayList<File> musics) {
+        this.name = name;
+        this.musics = musics;
+    }
+    
     public String getName() {
         return name;
     }

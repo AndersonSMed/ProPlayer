@@ -3,10 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/anderson/NetBeansProjects/ProPlayer/src/imd/player/view/LoginScreen.java</file>
-            <file>file:/home/anderson/NetBeansProjects/ProPlayer/src/imd/player/model/MusicDAO.java</file>
-            <file>file:/home/anderson/NetBeansProjects/ProPlayer/src/imd/player/view/MainScreen.java</file>
-            <file>file:/home/anderson/NetBeansProjects/ProPlayer/src/imd/player/model/Mp3Player.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/Facade.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/User.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/PlayListDao.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/view/LoginScreen.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/MusicDao.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/UserDAO.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/Admin.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/Playlist.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/control/MusicControl.java</file>
+            <file>file:/home/yuri-wrlk/Desktop/Java/ProPlayer/ProPlayer/src/imd/player/model/DAO.java</file>
         </group>
     </open-files>
 </project-private>

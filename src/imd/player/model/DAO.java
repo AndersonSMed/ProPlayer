@@ -15,17 +15,17 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileManager {
+public class DAO {
 
     private final File folders = new File("/home/anderson/Documents/Diretorios.txt");
     private File musicFile;
-    private Path playlistFolder;
+    private File playlistFolder;
     private File userFile;
 
-    public FileManager() throws FileNotFoundException, IOException {
+    public DAO() throws FileNotFoundException, IOException {
         BufferedReader bufferReader = new BufferedReader(new FileReader(folders));
         this.musicFile = new File(bufferReader.readLine());
-        this.playlistFolder = Paths.get(bufferReader.readLine());
+        this.playlistFolder = new File (bufferReader.readLine());
         this.userFile = new File(bufferReader.readLine());
     }
 
@@ -37,11 +37,11 @@ public class FileManager {
         this.musicFile = musicFile;
     }
 
-    public Path getPlaylistFolder() {
+    public File getPlaylistFolder() {
         return playlistFolder;
     }
 
-    public void setPlaylistFolder(Path playlistFolder) {
+    public void setPlaylistFolder(File playlistFolder) {
         this.playlistFolder = playlistFolder;
     }
 

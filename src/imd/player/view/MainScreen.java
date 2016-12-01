@@ -1,6 +1,6 @@
 package imd.player.view;
 
-import imd.player.model.MusicDAO;
+import imd.player.control.MusicControl;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
@@ -10,7 +10,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     private JFileChooser jfc;
     private FileNameExtensionFilter fl;
-    private MusicDAO musicdao;
+    private MusicControl musicdao;
     private ArrayList<File> playlist;
 
     public MainScreen() {
@@ -19,7 +19,7 @@ public class MainScreen extends javax.swing.JFrame {
         fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
         jfc = new JFileChooser();
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
-        musicdao = new MusicDAO();
+        musicdao = new MusicControl();
         playlist = new ArrayList<>();
     }
 

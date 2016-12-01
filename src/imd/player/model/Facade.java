@@ -1,15 +1,17 @@
 package imd.player.model;
 
+import imd.player.control.MusicControl;
 import java.io.File;
 import java.util.ArrayList;
 
 public class Facade {
 
     private static Facade singleton;
-    private MusicDAO musicDao;
+    private MusicControl musicDao;
+    private UserDAO userDAO;
 
     private Facade() {
-        this.musicDao = new MusicDAO();
+        this.musicDao = new MusicControl();
     }
 
     public static Facade getInstance() {

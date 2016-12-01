@@ -1,4 +1,4 @@
-package imd.player.model;
+package imd.player.control;
 
 import java.io.BufferedInputStream;
 import java.io.File;

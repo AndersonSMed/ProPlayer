@@ -1,18 +1,20 @@
-package imd.player.model;
+package imd.player.control;
 
+import imd.player.control.Mp3Player;
 import imd.player.control.Playlist;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javazoom.jl.decoder.JavaLayerException;
 
-public class MusicDAO implements Runnable {
+public class MusicControl implements Runnable {
 
     private ArrayList<File> playlist;
     private boolean playNextMusic = false;
     private boolean playBackMusic = false;
-
-    public MusicDAO() {
+    
+    
+    public MusicControl() {
         playlist = new ArrayList<>();
     }
 
@@ -73,8 +75,11 @@ public class MusicDAO implements Runnable {
                     continue;
                 }
 
-                if (i == this.playlist.size()) {
+                if (i == this.playlist.size() && this.playNextMusic) {
                     i = 0;
+                }
+                else if (i == this.playlist.size()){
+                    break;
                 }
             }
             try {
