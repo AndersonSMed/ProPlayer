@@ -10,71 +10,71 @@ import imd.player.control.Admin;
 import imd.player.control.User;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author yuri-wrlk
+ * @author Anderson Santos and Yuri Reinaldo
  */
 public class UserDAO {
 
     private File userFile;
-    private static Tree<User, String> userTree = new Tree <User,String>();
-    
-    public UserDAO(File userFile) {
+    private static Tree<User, String> userTree;
+
+    public UserDAO(File userFile) throws IOException {
+        if (this.userTree == null) {
+            this.userTree = new Tree<>();
+            this.readFile();
+        }
         this.userFile = userFile;
-        
     }
-    
-    public void readFile () throws IOException
-    {
+
+    private void readFile() throws IOException {
         String level;
         String id;
         String login;
         String password;
-        
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(userFile));
-            while(reader.ready()){
-                level = reader.readLine();
-                id = reader.readLine();
-                login = reader.readLine();
-                password = reader.readLine();
-                
-                if(level.equals("1")){
-                    userTree.insertNode(login, new Admin(Integer.parseInt(id), login, password));
-                }
-                else if (level.equals("0")){
-                    userTree.insertNode(login, new User(Integer.parseInt(id), login, password));
-                }
-            }
-                
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
-    
-    public void saveBackup (){
-        ArrayList<User> userList = new ArrayList<>();
-        try {
-            FileWriter writer = new FileWriter(userFile, false);
-            userTree.enlistTreeElements(userList);
-            for(User user : userList)
-            {
-                writer.write(user.toString());
-            }
+        BufferedReader reader = new BufferedReader(new FileReader(this.userFile));
+        while (reader.ready()) {
             
-        } catch (IOException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            level = reader.readLine();
+            id = reader.readLine();
+            login = reader.readLine();
+            password = reader.readLine();
+            
+            if (level.equals("1")) {
+                this.userTree.insertNode(login, new Admin(login, password));
+            } else if (level.equals("0")) {
+                this.userTree.insertNode(login, new User(login, password));
+            }
         }
+        reader.close();
+
     }
-    
+
+    public void saveBackup() throws IOException {
+        ArrayList<User> userList = new ArrayList<>();
+        FileWriter writer = new FileWriter(this.userFile, false);
+        userTree.enlistTreeElements(userList);
+        for (User user : userList) {
+            writer.write(user.toString());
+        }
+        writer.close();
+    }
+
+    public User getUser(String login) {
+        return this.userTree.binarySearch(login.hashCode() + "").getData();
+    }
+
+    public boolean addUser(User user) {
+        if (this.userTree.binarySearch(user.getId()) == null) {
+            this.userTree.insertNode(user.getId(), user);
+            return true;
+        }
+        return false;
+    }
+
 }

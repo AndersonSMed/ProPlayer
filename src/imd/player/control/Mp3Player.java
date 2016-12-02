@@ -60,7 +60,7 @@ public final class Mp3Player implements Runnable {
     public void stop() {
 
         this.player.close();
-
+        
     }
 
     public void playPause() {

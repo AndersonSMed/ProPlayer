@@ -1,27 +1,17 @@
 package imd.player.control;
 
-import java.io.File;
-import java.util.Random;
-
 public class User {
-    protected int id;
+    protected String id;
     protected String login;
     protected String password;
     
     public User(String login, String password){
-        Random rand = new Random();
-        this.id = rand.nextInt(1000);
+        this.id = login.hashCode() + "";
         this.login = login;
         this.password = password;
     }
 
-    public User(int id, String login, String password) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -35,11 +25,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void generateNewID(){
-        Random rand = new Random();
-        this.id = rand.nextInt(1000);
     }
     
     @Override

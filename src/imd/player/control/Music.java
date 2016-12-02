@@ -11,6 +11,11 @@ public class Music {
         this.musicFile = musicFile;
     }
 
+    public Music(File musicFile) {
+        this.name = musicFile.getName().split(".mp3")[0];
+        this.musicFile = musicFile;
+    }
+    
     public File getMusicFile() {
         return musicFile;
     }

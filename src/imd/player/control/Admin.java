@@ -10,10 +10,6 @@ public class Admin extends User{
         playlists = new ArrayList<Playlist>();
     }
 
-    public Admin(int id, String login, String password) {
-        super(id, login, password);
-    }
-
     
     
     public ArrayList<Playlist> getPlaylists() {

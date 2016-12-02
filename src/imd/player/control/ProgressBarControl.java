@@ -30,6 +30,7 @@ public class ProgressBarControl implements Runnable {
                     break;
                 }
                 this.progressBar.setValue(initialProgress - Mp3Player.getInstance().getStream().available());
+                Thread.sleep(1);
             }
             this.progressBar.setValue(this.progressBar.getMinimum());
         } catch (Exception e) {

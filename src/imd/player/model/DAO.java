@@ -10,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class DAO {
 
@@ -23,10 +20,11 @@ public class DAO {
     private File userFile;
 
     public DAO() throws FileNotFoundException, IOException {
-        BufferedReader bufferReader = new BufferedReader(new FileReader(folders));
-        this.musicFile = new File(bufferReader.readLine());
-        this.playlistFolder = new File (bufferReader.readLine());
-        this.userFile = new File(bufferReader.readLine());
+        try (BufferedReader bufferReader = new BufferedReader(new FileReader(folders))) {
+            this.musicFile = new File(bufferReader.readLine());
+            this.playlistFolder = new File (bufferReader.readLine());
+            this.userFile = new File(bufferReader.readLine());
+        }
     }
 
     public File getMusicFile() {
@@ -51,11 +49,6 @@ public class DAO {
 
     public void setUserFile(File userFile) {
         this.userFile = userFile;
-    }
-
-    public void insertUser(User user) throws IOException {
-        FileWriter writer = new FileWriter(userFile, true);
-
     }
 
 }
