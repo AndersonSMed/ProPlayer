@@ -14,7 +14,7 @@ public class MusicControl implements Runnable {
     private boolean playBackMusic = false;
     ProgressBarControl progressBarControl;
     private javax.swing.JProgressBar progressBar;
-    
+
     public MusicControl() {
         this.playlist = new ArrayList<>();
         this.progressBarControl = new ProgressBarControl();
@@ -60,7 +60,6 @@ public class MusicControl implements Runnable {
             if (Mp3Player.getInstance().getThread_t() != null) {
                 while (Mp3Player.getInstance().getThread_t().isAlive()) {
                     if (this.playNextMusic) {
-                        this.playNextMusic = false;
                         break;
                     }
                     if (this.playBackMusic) {
@@ -89,6 +88,9 @@ public class MusicControl implements Runnable {
                     i = 0;
                 } else if (i == this.playlist.size()) {
                     break;
+                }
+                if (this.playNextMusic) {
+                    this.playNextMusic = false;
                 }
             }
             try {
