@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
@@ -19,10 +18,11 @@ import javazoom.jl.player.advanced.AdvancedPlayer;
  */
 public final class Mp3Player implements Runnable {
 
-    private AdvancedPlayer ap;
+    private AdvancedPlayer player;
     private Thread thread_t;
     private static Mp3Player singleton;
     private boolean playing = false;
+    private BufferedInputStream bis;
 
     private Mp3Player() {
 
@@ -38,20 +38,20 @@ public final class Mp3Player implements Runnable {
     @Override
     public void run() {
         try {
-            this.ap.play();
+            this.player.play();
         } catch (JavaLayerException ex) {
             Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void start(File music) throws InterruptedException, FileNotFoundException, JavaLayerException {
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(music));
+        bis = new BufferedInputStream(new FileInputStream(music));
         if (thread_t != null) {
             if (thread_t.isAlive()) {
-                this.ap.close();
+                this.player.close();
             }
         }
-        this.ap = new AdvancedPlayer(bis);
+        this.player = new AdvancedPlayer(bis);
         thread_t = new Thread(this, "mp3Player");
         thread_t.start();
         this.playing = true;
@@ -59,7 +59,7 @@ public final class Mp3Player implements Runnable {
 
     public void stop() {
 
-        this.ap.close();
+        this.player.close();
 
     }
 
@@ -82,4 +82,7 @@ public final class Mp3Player implements Runnable {
         return playing;
     }
 
+    public BufferedInputStream getStream(){
+        return this.bis;
+    }
 }
