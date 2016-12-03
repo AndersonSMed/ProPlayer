@@ -37,12 +37,18 @@ public class MusicDao {
 
     }
 
-    public void addMusic(Music music) {
-        if (this.musics.get(music.getName()) == null) {
+    public boolean addMusic(Music music) {
+        if (this.musics.containsKey(music.getName())) {
             this.musics.put(music.getName(), music);
+            return true;
         }
+        return false;
     }
 
+    public Music getMusic(String musicName){
+        return this.musics.get(musicName);
+    }
+    
     public void saveBackup(ArrayList<File> musics) throws IOException {
         FileWriter writer = new FileWriter(this.musicFile, false);
         for(Music music : this.musics.values()){

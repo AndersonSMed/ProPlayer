@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,37 +51,45 @@ public class PlayListDao {
     public ArrayList<Playlist> getPlaylistByUser(String id) {
         if (this.playlists.containsKey(id)) {
             return this.playlists.get(id);
-        } else {
-            return null;
         }
+        return null;
     }
 
-    public void saveBackup() {
+    public void saveBackup() throws IOException {
         Set<String> adminIds = this.playlists.keySet();
         for (File toBeDeleted : this.playlistPath.listFiles()) {
             toBeDeleted.delete();
         }
         int fileIdentificator = 1;
+        File savedFile;
+        FileWriter writer;
         for (String id : adminIds) {
-            for(Playlist toBeSaved : this.playlists.get(id)){
-                
+            for (Playlist toBeSaved : this.playlists.get(id)) {
+                savedFile = new File(this.playlistPath.getName() + "playlist_" + fileIdentificator++ + ".txt");
+                savedFile.createNewFile();
+                writer = new FileWriter(savedFile, false);
+                writer.write(toBeSaved.getName() + "\n");
+                writer.write(id + "\n");
+                for (Music toBeSavedMusic : toBeSaved.getMusics()) {
+                    writer.write(toBeSavedMusic.getName() + "\n");
+                }
+                writer.close();
             }
         }
 
     }
 
-    public boolean addPlaylist(Admin user, Playlist playlist) {
-        if (this.playlists.containsKey(user.getId())) {
-            for (Playlist toBeAdded : this.playlists.get(user.getId())) {
-                if (toBeAdded.getName().equals(playlist.getName())) {
-                    toBeAdded = playlist;
-                    return true;
-                }
+    public void addPlaylist(Admin user, Playlist playlist) {
+        for (Playlist toBeAdded : this.playlists.get(user.getId())) {
+            if (toBeAdded.getName().equals(playlist.getName())) {
+                toBeAdded = playlist;
+                return;
             }
-            this.playlists.get(user.getId()).add(playlist);
-            return true;
         }
-        return false;
+        if (!this.playlists.containsKey(user.getId())) {
+            playlists.put(user.getId(), new ArrayList<>());
+        }
+        this.playlists.get(user.getId()).add(playlist);
     }
 
     public boolean removePlaylist(Admin user, String playlistName) {

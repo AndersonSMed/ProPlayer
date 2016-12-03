@@ -1,34 +1,63 @@
 package imd.player.model;
 
-import imd.player.control.MusicControl;
+import imd.player.control.Admin;
+import imd.player.control.Music;
+import imd.player.control.Playlist;
 import imd.player.control.User;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class ModelFacade {
 
     private static ModelFacade singleton;
-    private MusicControl musicDao;
-    private UserDAO userDAO;
-
-    private ModelFacade() {
-        this.musicDao = new MusicControl();
+    private final UserDao userDao;
+    private final MusicDao musicDao;
+    private final PlayListDao playlistDao;
+    private final DAO dao;
+    
+    private ModelFacade() throws IOException {
+        this.dao = new DAO();
+        this.musicDao = new MusicDao(this.dao.getMusicFile());
+        this.userDao = new UserDao(this.dao.getUserFile());
+        this.playlistDao = new PlayListDao(this.dao.getPlaylistFolder());
     }
 
-    public static ModelFacade getInstance() {
+    public static ModelFacade getInstance() throws IOException {
         if (ModelFacade.singleton == null) {
             ModelFacade.singleton = new ModelFacade();
         }
         return ModelFacade.singleton;
     }
     
-    public void playMusic(String musicName){
-        
-    }
-    
-    public void addInTree(User user){
-        
+    public boolean addUser(User user){
+        return this.userDao.addUser(user);
     }
 
     public User getUser(String login) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.userDao.getUser(login);
+    }
+    
+    public boolean removeUser(String login){
+        return this.userDao.removeUser(login);
+    }
+    
+    public boolean addMusic(Music music){
+        return this.musicDao.addMusic(music);
+    }
+    
+    public Music getMusic(String musicName){
+        return this.musicDao.getMusic(musicName);
+    }
+    
+    public void addPlaylist(Admin user, Playlist playlist){
+        this.playlistDao.addPlaylist(user, playlist);
+    }
+    
+    public boolean removePlayList(Admin user, String playlistName){
+        return this.playlistDao.removePlaylist(user, playlistName);
+    }
+    
+    public ArrayList<Playlist> getPlaylistsByUserId(String id){
+        return this.playlistDao.getPlaylistByUser(id);
     }
 }
