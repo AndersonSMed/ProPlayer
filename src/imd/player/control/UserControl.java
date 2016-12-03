@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  */
 public class UserControl {
 
-    private User logedUser;
+    private User loggedUser;
 
     public UserControl() {
 
@@ -30,7 +30,7 @@ public class UserControl {
         if(user == null) return false;
         
         if (user.getPassword().equals(password)) {
-            this.logedUser = user;
+            this.loggedUser = user;
             return true;
         }
         return false;
@@ -61,7 +61,7 @@ public class UserControl {
     public void addPlaylist(String name, ArrayList<Music> musics) {
         if (this.isAdmin()) {
             try {
-                ModelFacade.getInstance().addPlaylist((VipUser) this.logedUser, new Playlist(name, musics));
+                ModelFacade.getInstance().addPlaylist((VipUser) this.loggedUser, new Playlist(name, musics));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -71,7 +71,7 @@ public class UserControl {
     public boolean removePlaylist(String name) {
         if (this.isAdmin()) {
             try {
-                return ModelFacade.getInstance().removePlayList((VipUser) this.logedUser, name);
+                return ModelFacade.getInstance().removePlayList((VipUser) this.loggedUser, name);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -97,6 +97,10 @@ public class UserControl {
     }
 
     public boolean isAdmin() {
-        return (this.logedUser instanceof VipUser);
+        return (this.loggedUser instanceof VipUser);
+    }
+    
+    public User getLoggedUser(){
+        return this.loggedUser;
     }
 }

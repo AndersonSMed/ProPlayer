@@ -1,28 +1,21 @@
 package imd.player.view;
 
 import imd.player.control.ControlFacade;
-import imd.player.control.Music;
-import imd.player.control.MusicControl;
-import imd.player.control.Playlist;
-import imd.player.control.ProgressBarControl;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 public class MainScreen extends javax.swing.JFrame {
 
     private JFileChooser jfc;
     private FileNameExtensionFilter fl;
-    private MusicControl musiccontrol;
-    private Playlist playlist;
-
+    private DefaultTableModel dtm;
+    
     public MainScreen() {
         initComponents();
         
         if(!ControlFacade.getInstance().loggedUserIsAdmin()){
-            this.menuVip.setVisible(false);
+            //this.menuVip.setVisible(false);
             this.tblPlaylist.setVisible(false);
             this.tblPlaylistList.setVisible(false);
         }
@@ -30,8 +23,17 @@ public class MainScreen extends javax.swing.JFrame {
         fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
         jfc = new JFileChooser();
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
-        musiccontrol = new MusicControl();
-        playlist = new Playlist("teste");
+        dtm = new DefaultTableModel();
+        
+        Object [] identificators = {"Number", "Music name"};
+        dtm.setColumnIdentifiers(identificators);
+        int i = 1;
+        for(String musicNames : ControlFacade.getInstance().getAllMusicNames()){
+            Object [] name = {i++, musicNames};
+            dtm.addRow(name);
+        }
+        
+        this.tblFolder.setModel(dtm);
     }
     
 
@@ -318,7 +320,7 @@ public class MainScreen extends javax.swing.JFrame {
         jfc.showDialog(this, "Open");
         if (jfc.getSelectedFile() != null) {
             try {
-                this.playlist.addMusic(new Music(jfc.getSelectedFile().getName(), jfc.getSelectedFile()));
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -329,8 +331,7 @@ public class MainScreen extends javax.swing.JFrame {
         try {
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             jfc.removeChoosableFileFilter(jfc.getFileFilter());
-            //jfc.showDialog(this, "Open");
-            musiccontrol.playMusics(this.playlist, this.pbarMusic, this.lblMusicName);
+            jfc.showDialog(this, "Open");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -341,7 +342,7 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        if (musiccontrol.pausePlayMusic()) {
+        if (ControlFacade.getInstance().pauseOrPlayMusic()) {
             btnPlay.setText("Play");
         } else {
             btnPlay.setText("Pause");
@@ -349,11 +350,11 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForwardActionPerformed
-        musiccontrol.nextMusic();
+        ControlFacade.getInstance().playNextMusic();
     }//GEN-LAST:event_btnForwardActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        musiccontrol.backMusic();
+        ControlFacade.getInstance().playBackMusic();
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

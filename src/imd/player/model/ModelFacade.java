@@ -3,10 +3,10 @@ package imd.player.model;
 import imd.player.control.VipUser;
 import imd.player.control.Music;
 import imd.player.control.Playlist;
-import imd.player.control.NormalUser;
 import imd.player.control.User;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ModelFacade {
 
@@ -71,5 +71,9 @@ public class ModelFacade {
         this.musicDao.saveBackup();
         this.userDao.saveBackup();
         this.playlistDao.saveBackup();
+    }
+    
+    public Collection<Music> getAllMusics(){
+        return this.musicDao.getAllMusics();
     }
 }

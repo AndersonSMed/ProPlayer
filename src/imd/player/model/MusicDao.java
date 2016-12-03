@@ -3,11 +3,10 @@ package imd.player.model;
 import imd.player.control.Music;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class MusicDao implements DaoInterface {
@@ -29,12 +28,14 @@ public class MusicDao implements DaoInterface {
             BufferedReader reader = new BufferedReader(new FileReader(this.musicFile));
             File fileMusic;
             String name;
-
+            Music music;
+            
             while (reader.ready()) {
                 fileMusic = new File(reader.readLine());
-                name = fileMusic.getName().split(".mp3")[0];
-                musics.put(name, new Music(name, fileMusic));
+                music = new Music(fileMusic);
+                musics.put(music.getName(), music);
             }
+            
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,11 +59,15 @@ public class MusicDao implements DaoInterface {
         try {
             FileWriter writer = new FileWriter(this.musicFile, false);
             for (Music music : this.musics.values()) {
-                writer.write(music.getMusicFile().getAbsolutePath());
+                writer.write(music.getMusicFile().getAbsolutePath() + "\n");
             }
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public Collection<Music> getAllMusics(){
+        return this.musics.values();
     }
 }

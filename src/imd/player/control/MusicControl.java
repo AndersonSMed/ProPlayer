@@ -1,7 +1,8 @@
 package imd.player.control;
 
-import java.io.File;
+import imd.player.model.ModelFacade;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import javazoom.jl.decoder.JavaLayerException;
 
 /**
@@ -23,67 +24,52 @@ public class MusicControl implements Runnable {
         progressBarControl = new ProgressBarControl();
     }
 
-    /**
-     *
-     * @param music Música a ser tocada
-     * @param progressBar Barra de progresso que mostrará o progresso da música
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws JavaLayerException
-     */
-    public void playMusic(File music, javax.swing.JProgressBar progressBar) throws InterruptedException, FileNotFoundException, JavaLayerException {
-        this.progressBar = progressBar;
-        Mp3Player.getInstance().start(music);
-        this.progressBarControl.calculateProgress(this.progressBar);
-    }
-
-    /**
-     *
-     * @param music Música a ser tocada
-     * @param progressBar Barra de progresso que mostrará o progresso da música
-     * @param musicLabel Label que deverá ser atualizada com o nome da música
-     * atual
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws JavaLayerException
-     */
-    public void playMusic(Music music, javax.swing.JProgressBar progressBar, javax.swing.JLabel musicLabel) throws InterruptedException, FileNotFoundException, JavaLayerException {
+    public void playMusic(String musicName, javax.swing.JProgressBar progressBar, javax.swing.JLabel musicLabel) throws InterruptedException, FileNotFoundException, JavaLayerException {
         this.progressBar = progressBar;
         this.musicLabel = musicLabel;
-        Mp3Player.getInstance().start(music.getMusicFile());
-        this.progressBarControl.calculateProgress(this.progressBar);
-        String text = music.getName().split(".mp3")[0];
-        this.musicLabel.setText(text);
+        try {
+            Music music = ModelFacade.getInstance().getMusic(musicName);
+            if (music != null) {
+                Mp3Player.getInstance().start(music.getMusicFile());
+                this.progressBarControl.calculateProgress(this.progressBar);
+                String text = ModelFacade.getInstance().getMusic(musicName).getName().split(".mp3")[0];
+                this.musicLabel.setText(text);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     *
-     * @param playlist A playlist contendo as músicas que serão tocadas em ordem
-     * @param progressBar Barra de progresso que mostrará o progresso da música
-     * @throws InterruptedException
-     */
-    public void playMusics(Playlist playlist, javax.swing.JProgressBar progressBar) throws InterruptedException {
+    public void playMusics(VipUser user, String playlistName, javax.swing.JProgressBar progressBar) throws InterruptedException {
         this.progressBar = progressBar;
-        this.playlist = playlist;
-        Thread musics = new Thread(this, "playmusics");
-        musics.start();
+        try {
+            for (Playlist pl : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
+                if (pl.getName().equals(playlistName)) {
+                    this.playlist = pl;
+                    Thread musics = new Thread(this, "playmusics");
+                    musics.start();
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     *
-     * @param playlist A playlist contendo as músicas que serão tocadas em ordem
-     * @param progressBar Barra de progresso que mostrará o progresso da música
-     * @param musicLabel Recebe o label que mostrará o nome da música que está
-     * sendo executada atualmente
-     * @throws InterruptedException
-     */
-    public void playMusics(Playlist playlist, javax.swing.JProgressBar progressBar, javax.swing.JLabel musicLabel) throws InterruptedException {
+    public void playMusics(String playlistName, VipUser user, javax.swing.JProgressBar progressBar, javax.swing.JLabel musicLabel) throws InterruptedException {
         this.progressBar = progressBar;
-        this.playlist = playlist;
-        this.musicLabel = musicLabel;
-        Thread musics = new Thread(this, "playmusics");
-
-        musics.start();
+        try {
+            for (Playlist pl : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
+                if (pl.getName().equals(playlistName)) {
+                    this.playlist = pl;
+                    this.musicLabel = musicLabel;
+                    Thread musics = new Thread(this, "playmusics");
+                    musics.start();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -122,6 +108,18 @@ public class MusicControl implements Runnable {
             return true;
         }
         return false;
+    }
+
+    public ArrayList<String> getMusicNames() {
+        ArrayList<String> musicNames = new ArrayList<>();
+        try {
+            for (Music music : ModelFacade.getInstance().getAllMusics()) {
+                musicNames.add(music.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return musicNames;
     }
 
     /**
