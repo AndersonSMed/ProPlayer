@@ -49,7 +49,7 @@ public class MusicDao {
         return this.musics.get(musicName);
     }
     
-    public void saveBackup(ArrayList<File> musics) throws IOException {
+    public void saveBackup() throws IOException {
         FileWriter writer = new FileWriter(this.musicFile, false);
         for(Music music : this.musics.values()){
             writer.write(music.getMusicFile().getAbsolutePath());

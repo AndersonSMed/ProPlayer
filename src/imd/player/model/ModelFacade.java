@@ -60,4 +60,10 @@ public class ModelFacade {
     public ArrayList<Playlist> getPlaylistsByUserId(String id){
         return this.playlistDao.getPlaylistByUser(id);
     }
+    
+    public void saveFinalData() throws IOException{
+        this.musicDao.saveBackup();
+        this.userDao.saveBackup();
+        this.playlistDao.saveBackup();
+    }
 }
