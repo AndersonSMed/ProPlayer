@@ -1,8 +1,9 @@
 package imd.player.model;
 
-import imd.player.control.Admin;
+import imd.player.control.VipUser;
 import imd.player.control.Music;
 import imd.player.control.Playlist;
+import imd.player.control.NormalUser;
 import imd.player.control.User;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,10 +14,10 @@ public class ModelFacade {
     private final UserDao userDao;
     private final MusicDao musicDao;
     private final PlayListDao playlistDao;
-    private final DAO dao;
+    private final FolderDao dao;
     
     private ModelFacade() throws IOException {
-        this.dao = new DAO();
+        this.dao = new FolderDao();
         this.musicDao = new MusicDao(this.dao.getMusicFile());
         this.userDao = new UserDao(this.dao.getUserFile());
         this.playlistDao = new PlayListDao(this.dao.getPlaylistFolder());
@@ -37,6 +38,11 @@ public class ModelFacade {
         return this.userDao.getUser(login);
     }
     
+    public ArrayList<User> getAllUsers(){
+        return this.userDao.getAllUsers();
+    }
+   
+    
     public boolean removeUser(String login){
         return this.userDao.removeUser(login);
     }
@@ -49,11 +55,11 @@ public class ModelFacade {
         return this.musicDao.getMusic(musicName);
     }
     
-    public void addPlaylist(Admin user, Playlist playlist){
+    public void addPlaylist(VipUser user, Playlist playlist){
         this.playlistDao.addPlaylist(user, playlist);
     }
     
-    public boolean removePlayList(Admin user, String playlistName){
+    public boolean removePlayList(VipUser user, String playlistName){
         return this.playlistDao.removePlaylist(user, playlistName);
     }
     

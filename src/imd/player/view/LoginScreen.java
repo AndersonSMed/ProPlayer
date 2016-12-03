@@ -5,6 +5,10 @@
  */
 package imd.player.view;
 
+import imd.player.control.ControlFacade;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author anderson
@@ -111,7 +115,15 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterActionPerformed
-        System.out.println(txtPassword.getPassword());
+        if(ControlFacade.getInstance().loginAttempt(txtLogin.getText(), txtPassword.getText())){
+            MainScreen mainscreen = new MainScreen();
+            mainscreen.setVisible(true);
+            this.setVisible(false);
+        }else{
+            txtLogin.setText("");
+            txtPassword.setText("");
+            JOptionPane.showMessageDialog(this, "Senha e/ou login errados, tente novamente", "Falha no login", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnEnterActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed

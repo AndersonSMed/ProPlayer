@@ -5,21 +5,20 @@
  */
 package imd.player.model;
 
-import imd.player.control.User;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class DAO {
+public class FolderDao {
 
     private final File folders = new File("/home/anderson/Documents/Diretorios.txt");
     private File musicFile;
     private File playlistFolder;
     private File userFile;
 
-    public DAO() throws FileNotFoundException, IOException {
+    public FolderDao() throws FileNotFoundException, IOException {
         try (BufferedReader bufferReader = new BufferedReader(new FileReader(folders))) {
             this.musicFile = new File(bufferReader.readLine());
             this.playlistFolder = new File (bufferReader.readLine());

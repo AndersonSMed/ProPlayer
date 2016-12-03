@@ -5,8 +5,10 @@
  */
 package imd.player.model;
 
+import imd.AndersonYuri.dataStruct.Node;
 import imd.AndersonYuri.dataStruct.Tree;
-import imd.player.control.Admin;
+import imd.player.control.VipUser;
+import imd.player.control.NormalUser;
 import imd.player.control.User;
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,54 +21,69 @@ import java.util.ArrayList;
  *
  * @author Anderson Santos and Yuri Reinaldo
  */
-public class UserDao {
+public class UserDao implements DaoInterface {
 
-    private File userFile;
+    private final File userFile;
     private static Tree<User, String> userTree;
 
     public UserDao(File userFile) throws IOException {
-        if (this.userTree == null) {
-            this.userTree = new Tree<>();
-            this.readFile();
+        if (UserDao.userTree == null) {
+            UserDao.userTree = new Tree<>();
         }
         this.userFile = userFile;
+        this.readFile();
     }
 
-    private void readFile() throws IOException {
+    @Override
+    public void readFile() {
         String level;
-        String id;
         String login;
         String password;
-        BufferedReader reader = new BufferedReader(new FileReader(this.userFile));
-        while (reader.ready()) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(this.userFile));
+            while (reader.ready()) {
 
-            level = reader.readLine();
-            id = reader.readLine();
-            login = reader.readLine();
-            password = reader.readLine();
+                level = reader.readLine();
+                login = reader.readLine();
+                password = reader.readLine();
 
-            if (level.equals("1")) {
-                this.userTree.insertNode(login, new Admin(login, password));
-            } else if (level.equals("0")) {
-                this.userTree.insertNode(login, new User(login, password));
+                if (level.equals("1")) {
+                    UserDao.userTree.insertNode(login.hashCode() + "", new VipUser(login, password));
+                } else if (level.equals("0")) {
+                    UserDao.userTree.insertNode(login.hashCode() + "", new NormalUser(login, password));
+                }
             }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        reader.close();
-
     }
 
-    public void saveBackup() throws IOException {
+    @Override
+    public void saveBackup() {
         ArrayList<User> userList = new ArrayList<>();
-        FileWriter writer = new FileWriter(this.userFile, false);
-        userTree.enlistTreeElements(userList);
-        for (User user : userList) {
-            writer.write(user.toString());
+        try {
+            FileWriter writer = new FileWriter(this.userFile, false);
+            userTree.enlistTreeElements(userList);
+            for (User user : userList) {
+                writer.write(user.toString());
+            }
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        writer.close();
     }
 
     public User getUser(String login) {
-        return this.userTree.binarySearch(login.hashCode() + "").getData();
+        Node<User, String> node = UserDao.userTree.binarySearch(login.hashCode() + "");
+        if(node == null) return null;
+        return node.getData();
+    }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> list = null;
+        this.userTree.enlistTreeElements(list);
+        return list;
     }
 
     public boolean addUser(User user) {
@@ -84,5 +101,5 @@ public class UserDao {
         }
         return false;
     }
-
+    
 }

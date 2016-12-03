@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MusicDao {
+public class MusicDao implements DaoInterface {
 
     private File musicFile;
     private static HashMap<String, Music> musics;
@@ -23,18 +23,22 @@ public class MusicDao {
         this.readFile();
     }
 
-    private void readFile() throws FileNotFoundException, IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(this.musicFile));
-        File fileMusic;
-        String name;
-        
-        while (reader.ready()) {
-            fileMusic = new File(reader.readLine());
-            name = fileMusic.getName().split(".mp3")[0];
-            musics.put(name, new Music(name, fileMusic));
-        }
-        reader.close();
+    @Override
+    public void readFile() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(this.musicFile));
+            File fileMusic;
+            String name;
 
+            while (reader.ready()) {
+                fileMusic = new File(reader.readLine());
+                name = fileMusic.getName().split(".mp3")[0];
+                musics.put(name, new Music(name, fileMusic));
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean addMusic(Music music) {
@@ -45,15 +49,20 @@ public class MusicDao {
         return false;
     }
 
-    public Music getMusic(String musicName){
+    public Music getMusic(String musicName) {
         return this.musics.get(musicName);
     }
-    
-    public void saveBackup() throws IOException {
-        FileWriter writer = new FileWriter(this.musicFile, false);
-        for(Music music : this.musics.values()){
-            writer.write(music.getMusicFile().getAbsolutePath());
+
+    @Override
+    public void saveBackup() {
+        try {
+            FileWriter writer = new FileWriter(this.musicFile, false);
+            for (Music music : this.musics.values()) {
+                writer.write(music.getMusicFile().getAbsolutePath());
+            }
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        writer.close();
     }
 }
