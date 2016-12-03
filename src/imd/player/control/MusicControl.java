@@ -40,6 +40,38 @@ public class MusicControl implements Runnable {
         }
     }
 
+    public ArrayList<String> getMusicsFromPlaylist(VipUser user, String playlistName) {
+        
+        ArrayList<String> musicnames = new ArrayList<>();
+        Playlist playlist = null;
+        try{
+        for (Playlist pl : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
+            if (pl.getName().equals(playlistName)) {
+                for (Music music : pl.getMusics()) {
+                    musicnames.add(music.getName());
+                }
+                return musicnames;
+            }
+        }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return musicnames;
+    }
+    
+    public ArrayList<String> getPlaylists(VipUser user){
+        ArrayList<String> playlistNames = new ArrayList<>();
+        try{
+            for(Playlist pl: ModelFacade.getInstance().getPlaylistsByUserId(user.getId())){
+                playlistNames.add(pl.getName());
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return playlistNames;
+    }
+
     public void playMusics(VipUser user, String playlistName, javax.swing.JProgressBar progressBar) throws InterruptedException {
         this.progressBar = progressBar;
         try {

@@ -77,4 +77,8 @@ public class ControlFacade {
     public ArrayList<String> getAllMusicNames(){
         return this.musicControl.getMusicNames();
     }
+    
+    public ArrayList<String> getAllPLaylists(){
+        return this.musicControl.getPlaylists((VipUser) userControl.getLoggedUser());
+    }
 }
