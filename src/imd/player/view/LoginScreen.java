@@ -135,6 +135,11 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEnterActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        try {
+            ControlFacade.getInstance().exit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.exit(0);
     }//GEN-LAST:event_btnCloseActionPerformed
 
