@@ -26,6 +26,9 @@ public class ProgressBarControl implements Runnable {
             int initialProgress = Mp3Player.getInstance().getStream().available();
             this.progressBar.setMaximum(initialProgress);
             while (Mp3Player.getInstance().getThread_t().isAlive()) {
+                if(Mp3Player.getInstance().getStream() == null){
+                    break;
+                }
                 if (Mp3Player.getInstance().getStream().available() == 0) {
                     break;
                 }
