@@ -93,8 +93,4 @@ public class ControlFacade {
     public boolean addNewVipUser(String login, String password){
         return this.userControl.addVipUser(login, password);
     }
-    
-    public boolean removeUser(String login){
-        return this.userControl.removeUser(login);
-    }
 }

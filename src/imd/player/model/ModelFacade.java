@@ -41,11 +41,6 @@ public class ModelFacade {
     public ArrayList<User> getAllUsers(){
         return this.userDao.getAllUsers();
     }
-   
-    
-    public boolean removeUser(String login){
-        return this.userDao.removeUser(login);
-    }
     
     public boolean addMusic(Music music){
         return this.musicDao.addMusic(music);

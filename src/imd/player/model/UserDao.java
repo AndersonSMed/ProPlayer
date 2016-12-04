@@ -93,14 +93,5 @@ public class UserDao implements DaoInterface {
         }
         return false;
     }
-
-    public boolean removeUser(String login) {
-        String hashCode = login.hashCode() + "";
-        if (this.userTree.binarySearch(hashCode) != null) {
-            this.userTree.removeNode(hashCode);
-            return true;
-        }
-        return false;
-    }
     
 }

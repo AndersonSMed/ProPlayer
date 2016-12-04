@@ -76,17 +76,6 @@ public class UserControl {
         return usersLogin;
     }
 
-    public boolean removeUser(String login) {
-        if (this.isAdmin()) {
-            try {
-                return ModelFacade.getInstance().removeUser(login);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
     public void addPlaylist(String name, ArrayList<Music> musics) {
         if (this.isAdmin()) {
             try {
