@@ -38,8 +38,8 @@ public class ControlFacade {
         return this.userControl.isAdmin();
     }
 
-    public ArrayList<User> getNormalUsers() {
-        return this.userControl.getNormalUsers();
+    public ArrayList<String> getAllUsersLogins() {
+        return this.userControl.getAllUsersLogins();
     }
 
     public void exit() throws IOException {
@@ -84,5 +84,17 @@ public class ControlFacade {
     
     public ArrayList<String> getMusicsNamesFromPlaylist(String playlistName){
         return this.musicControl.getPlaylists((VipUser) this.userControl.getLoggedUser());
+    }
+    
+    public boolean addNewNormalUser(String login, String password){
+        return this.userControl.addNormalUser(login, password);
+    }
+    
+    public boolean addNewVipUser(String login, String password){
+        return this.userControl.addVipUser(login, password);
+    }
+    
+    public boolean removeUser(String login){
+        return this.userControl.removeUser(login);
     }
 }

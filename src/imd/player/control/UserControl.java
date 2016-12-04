@@ -26,9 +26,11 @@ public class UserControl {
             e.printStackTrace();
             return false;
         }
-        
-        if(user == null) return false;
-        
+
+        if (user == null) {
+            return false;
+        }
+
         if (user.getPassword().equals(password)) {
             this.loggedUser = user;
             return true;
@@ -36,8 +38,9 @@ public class UserControl {
         return false;
     }
 
-    public boolean addUser(User user) {
+    public boolean addNormalUser(String login, String password) {
         if (this.isAdmin()) {
+            NormalUser user = new NormalUser(login, password);
             try {
                 return ModelFacade.getInstance().addUser(user);
             } catch (Exception e) {
@@ -45,6 +48,32 @@ public class UserControl {
             }
         }
         return false;
+    }
+
+    public boolean addVipUser(String login, String password) {
+        if (this.isAdmin()) {
+            VipUser user = new VipUser(login, password);
+            try {
+                return ModelFacade.getInstance().addUser(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<String> getAllUsersLogins() {
+        ArrayList<String> usersLogin = new ArrayList<>();
+        if (this.isAdmin()) {
+            try {
+                for (User user : ModelFacade.getInstance().getAllUsers()) {
+                    usersLogin.add(user.getLogin());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return usersLogin;
     }
 
     public boolean removeUser(String login) {
@@ -78,29 +107,12 @@ public class UserControl {
         }
         return false;
     }
-    
-    public ArrayList<User> getNormalUsers(){
-        if(this.isAdmin()){
-            try{
-                ArrayList<User> userlist = new ArrayList<>();
-                for (User user : ModelFacade.getInstance().getAllUsers()){
-                    if(user instanceof NormalUser){
-                        userlist.add(user);
-                    } 
-                }
-                return userlist;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     public boolean isAdmin() {
         return (this.loggedUser instanceof VipUser);
     }
-    
-    public User getLoggedUser(){
+
+    public User getLoggedUser() {
         return this.loggedUser;
     }
 }

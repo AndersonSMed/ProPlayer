@@ -1,15 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package imd.player.view;
+
+import imd.player.control.ControlFacade;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author anderson
+ * @author Anderson Santos and Yuri Reinaldo
  */
 public class RemoveUserScreen extends javax.swing.JDialog {
+
+    private DefaultTableModel dtm;
 
     /**
      * Creates new form RemoveUserScreen
@@ -17,6 +17,13 @@ public class RemoveUserScreen extends javax.swing.JDialog {
     public RemoveUserScreen(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+
+        this.dtm = new DefaultTableModel();
+        Object[] colum = {"Login"};
+        this.dtm.setColumnIdentifiers(colum);
+
+        this.loadUsersTable();
+
     }
 
     /**
@@ -29,13 +36,13 @@ public class RemoveUserScreen extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblNormalUsers = new javax.swing.JTable();
+        tblUsers = new javax.swing.JTable();
         btnDelete = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        tblNormalUsers.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -58,14 +65,24 @@ public class RemoveUserScreen extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblNormalUsers);
-        if (tblNormalUsers.getColumnModel().getColumnCount() > 0) {
-            tblNormalUsers.getColumnModel().getColumn(0).setResizable(false);
+        jScrollPane1.setViewportView(tblUsers);
+        if (tblUsers.getColumnModel().getColumnCount() > 0) {
+            tblUsers.getColumnModel().getColumn(0).setResizable(false);
         }
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,6 +110,27 @@ public class RemoveUserScreen extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        String userLogin = (String) this.tblUsers.getValueAt(this.tblUsers.getSelectedRow(), 0);
+        if (!userLogin.equals("")) {
+            ControlFacade.getInstance().removeUser(userLogin);
+        }
+        this.loadUsersTable();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void loadUsersTable() {
+        for (String userLogin : ControlFacade.getInstance().getAllUsersLogins()) {
+            Object[] row = {userLogin};
+            this.dtm.addRow(row);
+        }
+
+        this.tblUsers.setModel(this.dtm);
+    }
 
     /**
      * @param args the command line arguments
@@ -140,6 +178,6 @@ public class RemoveUserScreen extends javax.swing.JDialog {
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnDelete;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblNormalUsers;
+    private javax.swing.JTable tblUsers;
     // End of variables declaration//GEN-END:variables
 }
