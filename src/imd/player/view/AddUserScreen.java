@@ -147,7 +147,13 @@ public class AddUserScreen extends javax.swing.JDialog {
             }
             if (!success) {
                 JOptionPane.showMessageDialog(this, "The user alread exist", "Insert a new Login", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "User " + userLogin + " added", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.txtNewLogin.setText("");
             }
+            this.pswPassword.setText("");
+            this.pswConfirm.setText("");
+            this.cbAdmin.setSelected(false);
         }
     }//GEN-LAST:event_btnConfirmActionPerformed
 

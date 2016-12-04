@@ -81,7 +81,7 @@ public class UserDao implements DaoInterface {
     }
 
     public ArrayList<User> getAllUsers() {
-        ArrayList<User> list = null;
+        ArrayList<User> list = new ArrayList<>();
         this.userTree.enlistTreeElements(list);
         return list;
     }
@@ -95,8 +95,9 @@ public class UserDao implements DaoInterface {
     }
 
     public boolean removeUser(String login) {
-        if (this.userTree.binarySearch(login.hashCode() + "") != null) {
-            this.userTree.removeNode(login.hashCode() + "");
+        String hashCode = login.hashCode() + "";
+        if (this.userTree.binarySearch(hashCode) != null) {
+            this.userTree.removeNode(hashCode);
             return true;
         }
         return false;
