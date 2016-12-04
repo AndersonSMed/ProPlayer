@@ -100,8 +100,7 @@ public class MusicControl implements Runnable {
     }
 
     public boolean addNewMusic(File musicFile) {
-        String musicName = musicFile.getName().split(".mp3")[0];
-        Music music = new Music(musicName, musicFile);
+        Music music = new Music(musicFile);
         try {
             return ModelFacade.getInstance().addMusic(music);
         } catch (Exception e) {

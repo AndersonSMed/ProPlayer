@@ -484,6 +484,7 @@ public class MainScreen extends javax.swing.JFrame {
         if (this.tblPlaylistList.getRowCount() > 0){
             this.updatePlaylistContentstable(selectedPlaylist);
             try {
+                ControlFacade.getInstance().stopMusic();
                 ControlFacade.getInstance().playPlaylist(selectedPlaylist, this.pbarMusic, this.lblMusicName);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -242,7 +242,7 @@ public class PlaylistScreen extends javax.swing.JDialog {
                 Object [] colum = {"Musics"};
                 this.playlistDtm = new DefaultTableModel();
                 this.playlistDtm.setColumnIdentifiers(colum);
-                this.tblPlaylistMusics.setModel(musicsDtm);
+                this.tblPlaylistMusics.setModel(this.playlistDtm);
                 MainScreen.updatePLaylistTable();
             }
         }
