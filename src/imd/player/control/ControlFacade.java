@@ -92,7 +92,7 @@ public class ControlFacade {
     }
     
     public ArrayList<String> getMusicsNamesFromPlaylist(String playlistName){
-        return this.musicControl.getPlaylists((VipUser) this.userControl.getLoggedUser());
+        return this.musicControl.getPlayListByUserId((VipUser) this.userControl.getLoggedUser(), playlistName);
     }
     
     public boolean addNewNormalUser(String login, String password){
