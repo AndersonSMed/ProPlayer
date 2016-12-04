@@ -23,17 +23,13 @@ public class MainScreen extends javax.swing.JFrame {
         fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
         jfc = new JFileChooser();
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
-        dtm = new DefaultTableModel();
         
-        Object [] identificators = {"Number", "Music name"};
-        dtm.setColumnIdentifiers(identificators);
-        int i = 1;
-        for(String musicNames : ControlFacade.getInstance().getAllMusicNames()){
-            Object [] name = {i++, musicNames};
-            dtm.addRow(name);
+        this.updateFolderTable();
+    
+        if(ControlFacade.getInstance().loggedUserIsAdmin()){
+            this.updatePLaylistTable();
+            this.updatePlaylistContentstable();
         }
-        
-        this.tblFolder.setModel(dtm);
     }
     
 
@@ -319,6 +315,49 @@ public class MainScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void updateFolderTable(){
+        dtm = new DefaultTableModel();
+        
+        Object [] identificators = {"Number", "Music name"};
+        dtm.setColumnIdentifiers(identificators);
+        int i = 1;
+        for(String musicNames : ControlFacade.getInstance().getAllMusicNames()){
+            Object [] name = {i++, musicNames};
+            dtm.addRow(name);
+        }
+ 
+        this.tblFolder.setModel(dtm);
+    }
+ 
+    private void updatePlaylistContentstable(){
+        dtm = new DefaultTableModel();
+        
+        Object [] identificators = {"Number", "Music name"};
+        dtm.setColumnIdentifiers(identificators);
+        int i = 1;
+        for(String musicNames : ControlFacade.getInstance().getMusicsNamesFromPlaylist(this.tblPlaylistList.getValueAt(this.tblPlaylistList.getSelectedRow(), 0).toString())){
+            Object [] name = {i++, musicNames};
+            dtm.addRow(name);
+        }
+ 
+        this.tblPlaylist.setModel(dtm);
+    }
+ 
+    private void updatePLaylistTable(){
+        dtm = new DefaultTableModel();
+        
+        Object [] identificators = {"Playlists"};
+        dtm.setColumnIdentifiers(identificators);
+        int i = 1;
+        for(String playlistNames : ControlFacade.getInstance().getAllPLaylistsNames()){
+            Object [] name = {playlistNames};
+            dtm.addRow(name);
+        }
+ 
+        this.tblFolder.setModel(dtm);
+    }
+            
+            
     private void menuOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenFileActionPerformed
         jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         if (jfc.getFileFilter() != fl) {
