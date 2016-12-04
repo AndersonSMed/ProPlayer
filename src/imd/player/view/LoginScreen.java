@@ -6,7 +6,10 @@
 package imd.player.view;
 
 import imd.player.control.ControlFacade;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -41,6 +44,11 @@ public class LoginScreen extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ProPlayer");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,11 +123,11 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterActionPerformed
-        if(ControlFacade.getInstance().loginAttempt(txtLogin.getText(), txtPassword.getText())){
+        if (ControlFacade.getInstance().loginAttempt(txtLogin.getText(), txtPassword.getText())) {
             MainScreen mainscreen = new MainScreen();
             mainscreen.setVisible(true);
             this.setVisible(false);
-        }else{
+        } else {
             txtLogin.setText("");
             txtPassword.setText("");
             JOptionPane.showMessageDialog(this, "Senha e/ou login errados, tente novamente", "Falha no login", JOptionPane.ERROR_MESSAGE);
@@ -129,6 +137,14 @@ public class LoginScreen extends javax.swing.JFrame {
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            ControlFacade.getInstance().exit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

@@ -66,43 +66,44 @@ public class ControlFacade {
     public void playMusic(String musicName, JProgressBar progressBar, JLabel musicLabel) throws InterruptedException, FileNotFoundException, JavaLayerException {
         this.musicControl.playMusic(musicName, progressBar, musicLabel);
     }
-    
-    public void playPlaylist(String playlistName, JProgressBar progressBar, JLabel musicLabel) throws InterruptedException{
+
+    public void playPlaylist(String playlistName, JProgressBar progressBar, JLabel musicLabel) throws InterruptedException {
         this.musicControl.playMusics(playlistName, (VipUser) this.userControl.getLoggedUser(), progressBar, musicLabel);
     }
-    
-    public String getLoggedUserLogin(){
+
+    public String getLoggedUserLogin() {
         return this.userControl.getLoggedUser().getLogin();
     }
-    
-    public boolean addNewMusic(File musicFile){
+
+    public boolean addNewMusic(File musicFile) {
         return this.musicControl.addNewMusic(musicFile);
     }
-    
-    public void addNewDirectoryOfMusics(File directory){
+
+    public void addNewDirectoryOfMusics(File directory) {
         this.musicControl.addDirectory(directory);
     }
-    
-    public ArrayList<String> getAllMusicNames(){
+
+    public ArrayList<String> getAllMusicNames() {
         return this.musicControl.getMusicNames();
     }
-    
-    public ArrayList<String> getAllPLaylistsNames(){
+
+    public ArrayList<String> getAllPLaylistsNames() {
         return this.musicControl.getPlaylists((VipUser) this.userControl.getLoggedUser());
     }
-    
-    public ArrayList<String> getMusicsNamesFromPlaylist(String playlistName){
-        return this.musicControl.getPlayListByUserId((VipUser) this.userControl.getLoggedUser(), playlistName);
+
+    public ArrayList<String> getMusicsNamesFromPlaylist(String playlistName) {
+        return this.musicControl.getPlayListByUserId((VipUser) this.userControl.getLoggedUser(), playlistName
+        );
     }
-    
-    public boolean addNewNormalUser(String login, String password){
+
+    public boolean addNewNormalUser(String login, String password) {
         return this.userControl.addNormalUser(login, password);
     }
-    
-    public boolean addNewVipUser(String login, String password){
+
+    public boolean addNewVipUser(String login, String password) {
         return this.userControl.addVipUser(login, password);
     }
-    
+
     public boolean createPlaylist(ArrayList<String> musicsNames, String playlistName){
         return this.musicControl.createPlaylist((VipUser) this.userControl.getLoggedUser(), musicsNames, playlistName);
     }

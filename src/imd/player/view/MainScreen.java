@@ -26,7 +26,10 @@ public class MainScreen extends javax.swing.JFrame {
             this.panelPlaylistMusics.setVisible(true);
             this.btnBack.setVisible(true);
             this.btnForward.setVisible(true);
+            this.lblPlaylistMusics.setVisible(true);
         }
+        
+        menuUser.setText(ControlFacade.getInstance().getLoggedUserLogin());
         
         fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
         jfc = new JFileChooser();
@@ -59,6 +62,11 @@ public class MainScreen extends javax.swing.JFrame {
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
+        jMenuBar3 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         pbarMusic = new javax.swing.JProgressBar();
         btnBack = new javax.swing.JButton();
         btnForward = new javax.swing.JButton();
@@ -76,6 +84,8 @@ public class MainScreen extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPlaylistList = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
+        menuUser = new javax.swing.JMenu();
+        menuLogoff = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         menuOpenFile = new javax.swing.JMenuItem();
         menuOpenDirectory = new javax.swing.JMenuItem();
@@ -90,6 +100,16 @@ public class MainScreen extends javax.swing.JFrame {
 
         jMenu6.setText("Edit");
         jMenuBar2.add(jMenu6);
+
+        jMenu2.setText("File");
+        jMenuBar3.add(jMenu2);
+
+        jMenu4.setText("Edit");
+        jMenuBar3.add(jMenu4);
+
+        jMenuItem1.setText("jMenuItem1");
+
+        jMenuItem2.setText("jMenuItem2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(827, 461));
@@ -183,7 +203,7 @@ public class MainScreen extends javax.swing.JFrame {
         lblMusics.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMusics.setText("Musics");
         lblMusics.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(lblMusics, new org.netbeans.lib.awtextra.AbsoluteConstraints(325, 25, 301, -1));
+        getContentPane().add(lblMusics, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 50, 301, -1));
 
         tblPlaylist.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -226,17 +246,19 @@ public class MainScreen extends javax.swing.JFrame {
             panelPlaylistMusicsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPlaylistMusicsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelPlaylistMusicsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPlaylistMusics, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(panelPlaylistMusicsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblPlaylistMusics, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelPlaylistMusicsLayout.setVerticalGroup(
             panelPlaylistMusicsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPlaylistMusicsLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(33, Short.MAX_VALUE)
                 .addComponent(lblPlaylistMusics)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
         );
@@ -297,6 +319,18 @@ public class MainScreen extends javax.swing.JFrame {
 
         getContentPane().add(panelPlaylist, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 10, 190, 320));
         panelPlaylist.setVisible(false);
+
+        menuUser.setText("User");
+
+        menuLogoff.setText("Logoff");
+        menuLogoff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuLogoffActionPerformed(evt);
+            }
+        });
+        menuUser.add(menuLogoff);
+
+        jMenuBar1.add(menuUser);
 
         jMenu1.setText("File");
 
@@ -447,7 +481,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void tblPlaylistListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPlaylistListMouseClicked
         String selectedPlaylist = (String) this.tblPlaylistList.getValueAt(this.tblPlaylistList.getSelectedRow(), 0);
-        if (!selectedPlaylist.equals("")) {
+        if (this.tblPlaylistList.getRowCount() > 0){
             this.updatePlaylistContentstable(selectedPlaylist);
             try {
                 ControlFacade.getInstance().playPlaylist(selectedPlaylist, this.pbarMusic, this.lblMusicName);
@@ -472,6 +506,13 @@ public class MainScreen extends javax.swing.JFrame {
         PlaylistScreen playlistScreen = new PlaylistScreen(this, false);
         playlistScreen.setVisible(true);
     }//GEN-LAST:event_menuCreatePlaylistActionPerformed
+
+    private void menuLogoffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuLogoffActionPerformed
+        LoginScreen login = new LoginScreen();
+        login.setVisible(true);
+        ControlFacade.getInstance().stopMusic();
+        this.setVisible(false);
+    }//GEN-LAST:event_menuLogoffActionPerformed
 
     /**
      * @param args the command line arguments
@@ -514,11 +555,16 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnPlay;
     private javax.swing.JButton btnStop;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuBar jMenuBar3;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -527,8 +573,10 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblPlaylistMusics;
     private javax.swing.JMenuItem menuAddUser;
     private javax.swing.JMenuItem menuCreatePlaylist;
+    private javax.swing.JMenuItem menuLogoff;
     private javax.swing.JMenuItem menuOpenDirectory;
     private javax.swing.JMenuItem menuOpenFile;
+    private javax.swing.JMenu menuUser;
     private javax.swing.JMenu menuVip;
     private javax.swing.JPanel panelPlaylist;
     private javax.swing.JPanel panelPlaylistMusics;
