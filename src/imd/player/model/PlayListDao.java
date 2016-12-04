@@ -71,7 +71,7 @@ public class PlayListDao implements DaoInterface {
         for (String id : adminIds) {
             for (Playlist toBeSaved : this.playlists.get(id)) {
                 try {
-                    savedFile = new File(this.playlistPath.getName() + "playlist_" + fileIdentificator++ + ".txt");
+                    savedFile = new File(this.playlistPath.getAbsolutePath() + "/playlist_" + fileIdentificator++ + ".txt");
                     savedFile.createNewFile();
                     writer = new FileWriter(savedFile, false);
                     writer.write(toBeSaved.getName() + "\n");
@@ -89,12 +89,6 @@ public class PlayListDao implements DaoInterface {
     }
 
     public void addPlaylist(VipUser user, Playlist playlist) {
-        for (Playlist toBeAdded : this.playlists.get(user.getId())) {
-            if (toBeAdded.getName().equals(playlist.getName())) {
-                toBeAdded = playlist;
-                return;
-            }
-        }
         if (!this.playlists.containsKey(user.getId())) {
             playlists.put(user.getId(), new ArrayList<>());
         }

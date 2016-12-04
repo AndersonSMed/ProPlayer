@@ -97,7 +97,7 @@ public class MusicControl implements Runnable {
         return musicNames;
     }
 
-    public boolean addNewMusic(File musicFile){
+    public boolean addNewMusic(File musicFile) {
         String musicName = musicFile.getName().split(".mp3")[0];
         Music music = new Music(musicName, musicFile);
         try {
@@ -107,18 +107,42 @@ public class MusicControl implements Runnable {
         }
         return false;
     }
-    
-    public void addDirectory(File directory){
-        Music music;
+
+    public boolean createPlaylist(VipUser user, ArrayList<String> musicsNames, String playlistName) {
+        try {
+            if (ModelFacade.getInstance().getPlaylistsByUserId(user.getId()) != null) {
+                for (Playlist p : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
+                    if (p.getName().equals(playlistName)) {
+                        return false;
+                    }
+                }
+            }
+            Playlist playlist = new Playlist(playlistName);
+            for (String musicName : musicsNames) {
+                playlist.addMusic(ModelFacade.getInstance().getMusic(musicName));
+            }
+            ModelFacade.getInstance().addPlaylist(user, playlist);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void addDirectory(File directory) {
         String musicName;
-        for(File actualFile : directory.listFiles()){
-            if(actualFile.getName().contains(".mp3")){
+        for (File actualFile : directory.listFiles()) {
+            if (actualFile.getName().contains(".mp3")) {
                 musicName = actualFile.getName().split(".mp3")[0];
-                music = new Music(musicName, actualFile);
+                try {
+                    ModelFacade.getInstance().addMusic(new Music(musicName, actualFile));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-    
+
     public void playMusics(VipUser user, String playlistName, javax.swing.JProgressBar progressBar) throws InterruptedException {
         this.progressBar = progressBar;
         try {

@@ -41,6 +41,7 @@ public class AddUserScreen extends javax.swing.JDialog {
         jCheckBox1.setText("jCheckBox1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jScrollPane1.setViewportView(txtNewLogin);
 

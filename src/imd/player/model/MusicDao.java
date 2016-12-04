@@ -43,7 +43,7 @@ public class MusicDao implements DaoInterface {
     }
 
     public boolean addMusic(Music music) {
-        if (this.musics.containsKey(music.getName())) {
+        if (!this.musics.containsKey(music.getName())) {
             this.musics.put(music.getName(), music);
             return true;
         }

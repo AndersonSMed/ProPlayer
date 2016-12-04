@@ -80,7 +80,7 @@ public class ControlFacade {
     }
     
     public void addNewDirectoryOfMusics(File directory){
-        this.musicControl.addNewMusic(directory);
+        this.musicControl.addDirectory(directory);
     }
     
     public ArrayList<String> getAllMusicNames(){
@@ -101,5 +101,9 @@ public class ControlFacade {
     
     public boolean addNewVipUser(String login, String password){
         return this.userControl.addVipUser(login, password);
+    }
+    
+    public boolean createPlaylist(ArrayList<String> musicsNames, String playlistName){
+        return this.musicControl.createPlaylist((VipUser) this.userControl.getLoggedUser(), musicsNames, playlistName);
     }
 }

@@ -15,7 +15,7 @@ public class MainScreen extends javax.swing.JFrame {
     private FileNameExtensionFilter fl;
     private DefaultTableModel dtmFiles;
     private DefaultTableModel dtmPlaylist;
-    private DefaultTableModel dtmPlaylistList;
+    private static DefaultTableModel dtmPlaylistList;
     
     public MainScreen() {
         initComponents();
@@ -373,18 +373,18 @@ public class MainScreen extends javax.swing.JFrame {
         this.lblPlaylistMusics.setText(playlistName);
     }
     
-    private void updatePLaylistTable() {
-        this.dtmPlaylistList = new DefaultTableModel();
+    public static void updatePLaylistTable() {
+        MainScreen.dtmPlaylistList = new DefaultTableModel();
         
         Object[] identificators = {"Playlists"};
-        this.dtmPlaylistList.setColumnIdentifiers(identificators);
+        MainScreen.dtmPlaylistList.setColumnIdentifiers(identificators);
         int i = 1;
         for (String playlistNames : ControlFacade.getInstance().getAllPLaylistsNames()) {
             Object[] name = {playlistNames};
-            this.dtmPlaylistList.addRow(name);
+            MainScreen.dtmPlaylistList.addRow(name);
         }
         
-        this.tblPlaylistList.setModel(this.dtmPlaylistList);
+        MainScreen.tblPlaylistList.setModel(MainScreen.dtmPlaylistList);
     }
     
 
@@ -408,6 +408,7 @@ public class MainScreen extends javax.swing.JFrame {
         if (jfc.getSelectedFile() != null) {
             ControlFacade.getInstance().addNewDirectoryOfMusics(jfc.getSelectedFile());
         }
+        this.updateFolderTable();
     }//GEN-LAST:event_menuOpenDirectoryActionPerformed
 
     private void menuAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddUserActionPerformed
@@ -445,7 +446,7 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void tblPlaylistListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPlaylistListMouseClicked
-        String selectedPlaylist = (String) this.tblPlaylistList.getValueAt(this.tblPlaylistList.getSelectedRow(), 1);
+        String selectedPlaylist = (String) this.tblPlaylistList.getValueAt(this.tblPlaylistList.getSelectedRow(), 0);
         if (!selectedPlaylist.equals("")) {
             this.updatePlaylistContentstable(selectedPlaylist);
             try {
@@ -534,6 +535,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JProgressBar pbarMusic;
     private javax.swing.JTable tblFolder;
     private javax.swing.JTable tblPlaylist;
-    private javax.swing.JTable tblPlaylistList;
+    private static javax.swing.JTable tblPlaylistList;
     // End of variables declaration//GEN-END:variables
 }
