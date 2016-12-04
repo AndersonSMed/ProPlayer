@@ -78,7 +78,11 @@ public class ControlFacade {
         return this.musicControl.getMusicNames();
     }
     
-    public ArrayList<String> getAllPLaylists(){
-        return this.musicControl.getPlaylists((VipUser) userControl.getLoggedUser());
+    public ArrayList<String> getAllPLaylistsNames(){
+        return this.musicControl.getPlaylists((VipUser) this.userControl.getLoggedUser());
+    }
+    
+    public ArrayList<String> getMusicsNamesFromPlaylist(String playlistName){
+        return this.musicControl.getPlaylists((VipUser) this.userControl.getLoggedUser());
     }
 }
