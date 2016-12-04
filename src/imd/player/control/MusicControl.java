@@ -1,8 +1,12 @@
 package imd.player.control;
 
 import imd.player.model.ModelFacade;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
 
 /**
@@ -30,6 +34,7 @@ public class MusicControl implements Runnable {
         try {
             Music music = ModelFacade.getInstance().getMusic(musicName);
             if (music != null) {
+                Mp3Player.getInstance().stop();
                 Mp3Player.getInstance().start(music.getMusicFile());
                 this.progressBarControl.calculateProgress(this.progressBar);
                 String text = ModelFacade.getInstance().getMusic(musicName).getName().split(".mp3")[0];
@@ -63,6 +68,9 @@ public class MusicControl implements Runnable {
     public ArrayList<String> getPlaylists(VipUser user) {
         ArrayList<String> playlistNames = new ArrayList<>();
         try {
+            if (ModelFacade.getInstance().getPlaylistsByUserId(user.getId()) == null) {
+                return playlistNames;
+            }
             for (Playlist pl : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
                 playlistNames.add(pl.getName());
             }
@@ -89,12 +97,35 @@ public class MusicControl implements Runnable {
         return musicNames;
     }
 
+    public boolean addNewMusic(File musicFile){
+        String musicName = musicFile.getName().split(".mp3")[0];
+        Music music = new Music(musicName, musicFile);
+        try {
+            return ModelFacade.getInstance().addMusic(music);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public void addDirectory(File directory){
+        Music music;
+        String musicName;
+        for(File actualFile : directory.listFiles()){
+            if(actualFile.getName().contains(".mp3")){
+                musicName = actualFile.getName().split(".mp3")[0];
+                music = new Music(musicName, actualFile);
+            }
+        }
+    }
+    
     public void playMusics(VipUser user, String playlistName, javax.swing.JProgressBar progressBar) throws InterruptedException {
         this.progressBar = progressBar;
         try {
             for (Playlist pl : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
                 if (pl.getName().equals(playlistName)) {
                     this.playlist = pl;
+                    Mp3Player.getInstance().stop();
                     Thread musics = new Thread(this, "playmusics");
                     musics.start();
                     return;

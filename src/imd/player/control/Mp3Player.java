@@ -58,9 +58,9 @@ public final class Mp3Player implements Runnable {
     }
 
     public void stop() {
-
-        this.player.close();
-        
+        if (this.player != null) {
+            this.player.close();
+        }
     }
 
     public void playPause() {
@@ -82,7 +82,11 @@ public final class Mp3Player implements Runnable {
         return playing;
     }
 
-    public BufferedInputStream getStream(){
+    public BufferedInputStream getStream() {
         return this.bis;
+    }
+    
+    public AdvancedPlayer getPlayer(){
+        return this.player;
     }
 }

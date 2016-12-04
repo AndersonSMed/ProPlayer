@@ -1,23 +1,31 @@
 package imd.player.view;
 
 import imd.player.control.ControlFacade;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javazoom.jl.decoder.JavaLayerException;
 
 public class MainScreen extends javax.swing.JFrame {
-
+    
     private JFileChooser jfc;
     private FileNameExtensionFilter fl;
-    private DefaultTableModel dtm;
+    private DefaultTableModel dtmFiles;
+    private DefaultTableModel dtmPlaylist;
+    private DefaultTableModel dtmPlaylistList;
     
     public MainScreen() {
         initComponents();
         
-        if(!ControlFacade.getInstance().loggedUserIsAdmin()){
-            //this.menuVip.setVisible(false);
-            this.tblPlaylist.setVisible(false);
-            this.tblPlaylistList.setVisible(false);
+        if (ControlFacade.getInstance().loggedUserIsAdmin()) {
+            this.menuVip.setVisible(true);
+            this.panelPlaylist.setVisible(true);
+            this.panelPlaylistMusics.setVisible(true);
+            this.btnBack.setVisible(true);
+            this.btnForward.setVisible(true);
         }
         
         fl = new FileNameExtensionFilter("Mp3 Files", "mp3");
@@ -25,13 +33,18 @@ public class MainScreen extends javax.swing.JFrame {
         jfc.removeChoosableFileFilter(jfc.getFileFilter());
         
         this.updateFolderTable();
-    
-        if(ControlFacade.getInstance().loggedUserIsAdmin()){
+        
+        if (ControlFacade.getInstance().loggedUserIsAdmin()) {
             this.updatePLaylistTable();
-            this.updatePlaylistContentstable();
+            String firstPlaylist = "";
+            if (this.tblPlaylistList.getRowCount() >= 1) {
+                firstPlaylist = (String) this.tblPlaylistList.getValueAt(0, 0);
+            }
+            if (!firstPlaylist.equals("")) {
+                this.updatePlaylistContentstable(firstPlaylist);
+            }
         }
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,21 +64,24 @@ public class MainScreen extends javax.swing.JFrame {
         btnForward = new javax.swing.JButton();
         btnPlay = new javax.swing.JButton();
         lblMusicName = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblPlaylist = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblPlaylistList = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblFolder = new javax.swing.JTable();
-        lblPlaylist = new javax.swing.JLabel();
         btnStop = new javax.swing.JButton();
+        lblMusics = new javax.swing.JLabel();
+        panelPlaylistMusics = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblPlaylist = new javax.swing.JTable();
+        lblPlaylistMusics = new javax.swing.JLabel();
+        panelPlaylist = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblPlaylistList = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuOpenFile = new javax.swing.JMenuItem();
         menuOpenDirectory = new javax.swing.JMenuItem();
         menuVip = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuCreatePlaylist = new javax.swing.JMenuItem();
+        menuAddUser = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
 
@@ -76,14 +92,17 @@ public class MainScreen extends javax.swing.JFrame {
         jMenuBar2.add(jMenu6);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(827, 461));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pbarMusic.setName(""); // NOI18N
+        getContentPane().add(pbarMusic, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 348, 803, -1));
 
         btnBack.setText("Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +110,8 @@ public class MainScreen extends javax.swing.JFrame {
                 btnBackActionPerformed(evt);
             }
         });
+        btnBack.setVisible(false);
+        getContentPane().add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(272, 380, 71, -1));
 
         btnForward.setText("Forward");
         btnForward.addActionListener(new java.awt.event.ActionListener() {
@@ -98,6 +119,8 @@ public class MainScreen extends javax.swing.JFrame {
                 btnForwardActionPerformed(evt);
             }
         });
+        btnForward.setVisible(false);
+        getContentPane().add(btnForward, new org.netbeans.lib.awtextra.AbsoluteConstraints(511, 380, -1, -1));
 
         btnPlay.setText("Pause");
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
@@ -105,9 +128,62 @@ public class MainScreen extends javax.swing.JFrame {
                 btnPlayActionPerformed(evt);
             }
         });
+        getContentPane().add(btnPlay, new org.netbeans.lib.awtextra.AbsoluteConstraints(349, 374, 75, 42));
 
         lblMusicName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMusicName.setText(" ");
+        getContentPane().add(lblMusicName, new org.netbeans.lib.awtextra.AbsoluteConstraints(118, 324, 599, -1));
+
+        tblFolder.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Number", "Music Name"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblFolder.getTableHeader().setReorderingAllowed(false);
+        tblFolder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblFolderMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblFolder);
+        if (tblFolder.getColumnModel().getColumnCount() > 0) {
+            tblFolder.getColumnModel().getColumn(0).setResizable(false);
+            tblFolder.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tblFolder.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(325, 73, 301, 224));
+
+        btnStop.setText("Stop");
+        btnStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnStop, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 374, 75, 42));
+
+        lblMusics.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMusics.setText("Musics");
+        lblMusics.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(lblMusics, new org.netbeans.lib.awtextra.AbsoluteConstraints(325, 25, 301, -1));
 
         tblPlaylist.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -140,6 +216,34 @@ public class MainScreen extends javax.swing.JFrame {
             tblPlaylist.getColumnModel().getColumn(1).setResizable(false);
         }
 
+        lblPlaylistMusics.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPlaylistMusics.setText("Playlist Musics");
+        lblPlaylistMusics.setVisible(false);
+
+        javax.swing.GroupLayout panelPlaylistMusicsLayout = new javax.swing.GroupLayout(panelPlaylistMusics);
+        panelPlaylistMusics.setLayout(panelPlaylistMusicsLayout);
+        panelPlaylistMusicsLayout.setHorizontalGroup(
+            panelPlaylistMusicsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPlaylistMusicsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelPlaylistMusicsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPlaylistMusics, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        panelPlaylistMusicsLayout.setVerticalGroup(
+            panelPlaylistMusicsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPlaylistMusicsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblPlaylistMusics)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
+        );
+
+        getContentPane().add(panelPlaylistMusics, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 320, 310));
+        panelPlaylistMusics.setVisible(false);
+
         tblPlaylistList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -164,46 +268,35 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
         tblPlaylistList.getTableHeader().setReorderingAllowed(false);
+        tblPlaylistList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPlaylistListMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblPlaylistList);
         if (tblPlaylistList.getColumnModel().getColumnCount() > 0) {
             tblPlaylistList.getColumnModel().getColumn(0).setResizable(false);
         }
 
-        tblFolder.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        javax.swing.GroupLayout panelPlaylistLayout = new javax.swing.GroupLayout(panelPlaylist);
+        panelPlaylist.setLayout(panelPlaylistLayout);
+        panelPlaylistLayout.setHorizontalGroup(
+            panelPlaylistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPlaylistLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelPlaylistLayout.setVerticalGroup(
+            panelPlaylistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPlaylistLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
 
-            },
-            new String [] {
-                "Number", "Music Name"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblFolder.getTableHeader().setReorderingAllowed(false);
-        jScrollPane3.setViewportView(tblFolder);
-        if (tblFolder.getColumnModel().getColumnCount() > 0) {
-            tblFolder.getColumnModel().getColumn(0).setResizable(false);
-            tblFolder.getColumnModel().getColumn(0).setPreferredWidth(5);
-            tblFolder.getColumnModel().getColumn(1).setResizable(false);
-        }
-
-        lblPlaylist.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPlaylist.setText(" ");
-
-        btnStop.setText("Stop");
+        getContentPane().add(panelPlaylist, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 10, 190, 320));
+        panelPlaylist.setVisible(false);
 
         jMenu1.setText("File");
 
@@ -227,137 +320,74 @@ public class MainScreen extends javax.swing.JFrame {
 
         menuVip.setText("VIP");
 
-        jMenuItem2.setText("Create playlist");
-        menuVip.add(jMenuItem2);
-
-        jMenuItem1.setText("Manage Users");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuCreatePlaylist.setText("Create playlist");
+        menuCreatePlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menuCreatePlaylistActionPerformed(evt);
             }
         });
-        menuVip.add(jMenuItem1);
+        menuVip.add(menuCreatePlaylist);
+
+        menuAddUser.setText("Add User");
+        menuAddUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAddUserActionPerformed(evt);
+            }
+        });
+        menuVip.add(menuAddUser);
 
         jMenuBar1.add(menuVip);
+        menuVip.setVisible(false);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(pbarMusic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(lblPlaylist, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(106, 106, 106)
-                                .addComponent(lblMusicName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(110, 110, 110)))
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(248, Short.MAX_VALUE)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnForward)
-                .addGap(245, 245, 245))
-        );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnPlay, btnStop});
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBack, btnForward});
-
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPlaylist)
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(lblMusicName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pbarMusic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnForward)
-                    .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack)
-                    .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22))
-        );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnPlay, btnStop});
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBack, btnForward});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void updateFolderTable(){
-        dtm = new DefaultTableModel();
+    private void updateFolderTable() {
+        this.dtmFiles = new DefaultTableModel();
         
-        Object [] identificators = {"Number", "Music name"};
-        dtm.setColumnIdentifiers(identificators);
+        Object[] identificators = {"Number", "Music name"};
+        this.dtmFiles.setColumnIdentifiers(identificators);
         int i = 1;
-        for(String musicNames : ControlFacade.getInstance().getAllMusicNames()){
-            Object [] name = {i++, musicNames};
-            dtm.addRow(name);
+        for (String musicNames : ControlFacade.getInstance().getAllMusicNames()) {
+            Object[] name = {i++, musicNames};
+            this.dtmFiles.addRow(name);
         }
- 
-        this.tblFolder.setModel(dtm);
-    }
- 
-    private void updatePlaylistContentstable(){
-        dtm = new DefaultTableModel();
         
-        Object [] identificators = {"Number", "Music name"};
-        dtm.setColumnIdentifiers(identificators);
-        int i = 1;
-        for(String musicNames : ControlFacade.getInstance().getMusicsNamesFromPlaylist(this.tblPlaylistList.getValueAt(this.tblPlaylistList.getSelectedRow(), 0).toString())){
-            Object [] name = {i++, musicNames};
-            dtm.addRow(name);
-        }
- 
-        this.tblPlaylist.setModel(dtm);
+        this.tblFolder.setModel(this.dtmFiles);
     }
- 
-    private void updatePLaylistTable(){
-        dtm = new DefaultTableModel();
+    
+    private void updatePlaylistContentstable(String playlistName) {
+        this.dtmPlaylist = new DefaultTableModel();
         
-        Object [] identificators = {"Playlists"};
-        dtm.setColumnIdentifiers(identificators);
+        Object[] identificators = {"Number", "Music name"};
+        this.dtmPlaylist.setColumnIdentifiers(identificators);
         int i = 1;
-        for(String playlistNames : ControlFacade.getInstance().getAllPLaylistsNames()){
-            Object [] name = {playlistNames};
-            dtm.addRow(name);
+        for (String musicNames : ControlFacade.getInstance().getMusicsNamesFromPlaylist(playlistName)) {
+            Object[] name = {i++, musicNames};
+            this.dtmPlaylist.addRow(name);
         }
- 
-        this.tblFolder.setModel(dtm);
+        
+        this.tblPlaylist.setModel(this.dtmPlaylist);
+        this.lblPlaylistMusics.setText(playlistName);
     }
-            
-            
+    
+    private void updatePLaylistTable() {
+        this.dtmPlaylistList = new DefaultTableModel();
+        
+        Object[] identificators = {"Playlists"};
+        this.dtmPlaylistList.setColumnIdentifiers(identificators);
+        int i = 1;
+        for (String playlistNames : ControlFacade.getInstance().getAllPLaylistsNames()) {
+            Object[] name = {playlistNames};
+            this.dtmPlaylistList.addRow(name);
+        }
+        
+        this.tblPlaylistList.setModel(this.dtmPlaylistList);
+    }
+    
+
     private void menuOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenFileActionPerformed
         jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         if (jfc.getFileFilter() != fl) {
@@ -365,27 +395,25 @@ public class MainScreen extends javax.swing.JFrame {
         }
         jfc.showDialog(this, "Open");
         if (jfc.getSelectedFile() != null) {
-            try {
-                ControlFacade.getInstance().playMusic((String) tblFolder.getValueAt(tblFolder.getSelectedRow(), 1), pbarMusic, lblMusicName);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (ControlFacade.getInstance().addNewMusic(jfc.getSelectedFile())) {
+                this.updateFolderTable();
             }
         }
     }//GEN-LAST:event_menuOpenFileActionPerformed
 
     private void menuOpenDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenDirectoryActionPerformed
-        try {
-            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            jfc.removeChoosableFileFilter(jfc.getFileFilter());
-            jfc.showDialog(this, "Open");
-        } catch (Exception e) {
-            e.printStackTrace();
+        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jfc.removeChoosableFileFilter(jfc.getFileFilter());
+        jfc.showDialog(this, "Open");
+        if (jfc.getSelectedFile() != null) {
+            ControlFacade.getInstance().addNewDirectoryOfMusics(jfc.getSelectedFile());
         }
     }//GEN-LAST:event_menuOpenDirectoryActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void menuAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddUserActionPerformed
+        AddUserScreen addUser = new AddUserScreen(this, false);
+        addUser.setVisible(true);
+    }//GEN-LAST:event_menuAddUserActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
         if (ControlFacade.getInstance().pauseOrPlayMusic()) {
@@ -409,8 +437,40 @@ public class MainScreen extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
+        ControlFacade.getInstance().stopMusic();
+    }//GEN-LAST:event_btnStopActionPerformed
+
+    private void tblPlaylistListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPlaylistListMouseClicked
+        String selectedPlaylist = (String) this.tblPlaylistList.getValueAt(this.tblPlaylistList.getSelectedRow(), 1);
+        if (!selectedPlaylist.equals("")) {
+            this.updatePlaylistContentstable(selectedPlaylist);
+            try {
+                ControlFacade.getInstance().playPlaylist(selectedPlaylist, this.pbarMusic, this.lblMusicName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_tblPlaylistListMouseClicked
+
+    private void tblFolderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFolderMouseClicked
+        String selectedMusic = (String) this.tblFolder.getValueAt(this.tblFolder.getSelectedRow(), 1);
+        if (!selectedMusic.equals("")) {
+            try {
+                ControlFacade.getInstance().playMusic(selectedMusic, this.pbarMusic, this.lblMusicName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_tblFolderMouseClicked
+
+    private void menuCreatePlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCreatePlaylistActionPerformed
+        PlaylistScreen playlistScreen = new PlaylistScreen(this, false);
+        playlistScreen.setVisible(true);
+    }//GEN-LAST:event_menuCreatePlaylistActionPerformed
 
     /**
      * @param args the command line arguments
@@ -458,16 +518,19 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblMusicName;
-    private javax.swing.JLabel lblPlaylist;
+    private javax.swing.JLabel lblMusics;
+    private javax.swing.JLabel lblPlaylistMusics;
+    private javax.swing.JMenuItem menuAddUser;
+    private javax.swing.JMenuItem menuCreatePlaylist;
     private javax.swing.JMenuItem menuOpenDirectory;
     private javax.swing.JMenuItem menuOpenFile;
     private javax.swing.JMenu menuVip;
+    private javax.swing.JPanel panelPlaylist;
+    private javax.swing.JPanel panelPlaylistMusics;
     private javax.swing.JProgressBar pbarMusic;
     private javax.swing.JTable tblFolder;
     private javax.swing.JTable tblPlaylist;

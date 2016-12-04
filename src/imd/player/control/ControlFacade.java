@@ -1,6 +1,7 @@
 package imd.player.control;
 
 import imd.player.model.ModelFacade;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,6 +73,14 @@ public class ControlFacade {
     
     public String getLoggedUserLogin(){
         return this.userControl.getLoggedUser().getLogin();
+    }
+    
+    public boolean addNewMusic(File musicFile){
+        return this.musicControl.addNewMusic(musicFile);
+    }
+    
+    public void addNewDirectoryOfMusics(File directory){
+        this.musicControl.addNewMusic(directory);
     }
     
     public ArrayList<String> getAllMusicNames(){
