@@ -13,11 +13,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * A class that is responsible for reading the Playlist folder and manages all 
+ * playlist related data.
+ * 
+ * @author Anderson Santos and Yuri Reinaldo
+ */
 public class PlayListDao implements DaoInterface {
 
+    /**
+     * A Map of ArrayLists that keep all Playlists sorted by the creator's id.
+     */
     private static HashMap<String, ArrayList<Playlist>> playlists;
+    /**
+     * A {@link File} instance that keeps the path to the folder which contains
+     * all playlists previously saved.
+     */
     private File playlistPath;
 
+    /**
+     * The construtor receives the folder path which it should read and get all 
+     * data from the playlist files inside.
+     * @param playlistPath a File instance with the path to the folder.
+     * @throws IOException 
+     */
     public PlayListDao(File playlistPath) throws FileNotFoundException, IOException {
         if (this.playlists == null) {
             this.playlists = new HashMap<>();
@@ -26,6 +45,11 @@ public class PlayListDao implements DaoInterface {
         this.readFile();
     }
 
+    /**
+     * Reads all files contained in the set folder path and adds the data to the
+     * playlists,This method should be called whenever this class is 
+     * instantiated. 
+     */
     @Override
     public void readFile() {
         String playlistId;
@@ -56,6 +80,12 @@ public class PlayListDao implements DaoInterface {
         }
     }
 
+    /**
+     * Returns an array with all playlists that are set with the user id.
+     * @param id The user id that created the playlists
+     * @return An ArrayList if there contains a playlist created by the user, a 
+     * null pointer otherwise.  
+     */
     public ArrayList<Playlist> getPlaylistByUser(String id) {
         if (this.playlists.containsKey(id)) {
             return this.playlists.get(id);
@@ -63,6 +93,10 @@ public class PlayListDao implements DaoInterface {
         return null;
     }
 
+    /**
+     * This method saves all data contained in the playlist files in the set 
+     * folder, This method should always be called before this object is destroyed.
+     */
     @Override
     public void saveBackup() {
         Set<String> adminIds = this.playlists.keySet();
@@ -94,6 +128,11 @@ public class PlayListDao implements DaoInterface {
 
     }
 
+    /**
+     * Adds a new playlist given a user and a Playlist object.
+     * @param user The user who created the playlist
+     * @param playlist  the playlist object already completed.
+     */
     public void addPlaylist(VipUser user, Playlist playlist) {
         if (!this.playlists.containsKey(user.getId())) {
             playlists.put(user.getId(), new ArrayList<>());
@@ -101,6 +140,13 @@ public class PlayListDao implements DaoInterface {
         this.playlists.get(user.getId()).add(playlist);
     }
 
+    /**
+     * Removes a playlist from the database given it's creator id and it's name.
+     * @param user the playlist creator.
+     * @param playlistName the name of the playlist to be removed. 
+     * @return True if the playlist was inside the database and if it was 
+     * removed, False otherwise.
+     */
     public boolean removePlaylist(VipUser user, String playlistName) {
         if (this.playlists.containsKey(user.getId())) {
             for (Playlist toBeRemoved : this.playlists.get(user.getId())) {
