@@ -144,23 +144,6 @@ public class MusicControl implements Runnable {
         }
     }
 
-    public void playMusics(VipUser user, String playlistName, javax.swing.JProgressBar progressBar) throws InterruptedException {
-        this.progressBar = progressBar;
-        try {
-            for (Playlist pl : ModelFacade.getInstance().getPlaylistsByUserId(user.getId())) {
-                if (pl.getName().equals(playlistName)) {
-                    this.playlist = pl;
-                    Mp3Player.getInstance().stop();
-                    Thread musics = new Thread(this, "playmusics");
-                    musics.start();
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void playMusics(String playlistName, VipUser user, javax.swing.JProgressBar progressBar, javax.swing.JLabel musicLabel) throws InterruptedException {
         this.progressBar = progressBar;
         try {
@@ -210,7 +193,7 @@ public class MusicControl implements Runnable {
     public boolean stopMusic() {
         if (Mp3Player.getInstance().getThread_t() != null) {
             if (this.musics != null) {
-                this.stop = true;
+                if(this.musics.isAlive()) this.stop = true;
             }
             if (Mp3Player.getInstance().getThread_t().isAlive()) {
                 Mp3Player.getInstance().stop();
@@ -246,13 +229,15 @@ public class MusicControl implements Runnable {
                     try {
                         Thread.sleep(100);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        
                     }
                 }
-                if (this.stop) {
+                
+                if(this.stop){
                     this.stop = false;
                     break;
                 }
+                
                 if (this.playBackMusic) {
                     i = (i < 2) ? (this.playlist.getMusics().size() - 1) : (i - 2);
                     try {
@@ -268,13 +253,14 @@ public class MusicControl implements Runnable {
                 }
 
                 if (i == this.playlist.getMusics().size() && this.playNextMusic) {
+                    this.playNextMusic = false;
                     i = 0;
                 } else if (i == this.playlist.getMusics().size()) {
                     break;
                 }
-                if (this.playNextMusic) {
-                    this.playNextMusic = false;
-                }
+                
+                this.playNextMusic = false;
+                
             }
             try {
                 Mp3Player.getInstance().start(this.playlist.getMusics().get(i).getMusicFile());

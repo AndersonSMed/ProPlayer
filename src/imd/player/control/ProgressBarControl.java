@@ -26,14 +26,15 @@ public class ProgressBarControl implements Runnable {
             int initialProgress = Mp3Player.getInstance().getStream().available();
             this.progressBar.setMaximum(initialProgress);
             while (Mp3Player.getInstance().getThread_t().isAlive()) {
-                if(Mp3Player.getInstance().getStream() == null){
+                try {
+                    if(Mp3Player.getInstance().getStream().available() == 0){
+                        break;
+                    }
+                    this.progressBar.setValue(initialProgress - Mp3Player.getInstance().getStream().available());
+                    Thread.sleep(10);
+                } catch (Exception e) {
                     break;
                 }
-                if (Mp3Player.getInstance().getStream().available() == 0) {
-                    break;
-                }
-                this.progressBar.setValue(initialProgress - Mp3Player.getInstance().getStream().available());
-                Thread.sleep(1);
             }
             this.progressBar.setValue(this.progressBar.getMinimum());
         } catch (Exception e) {

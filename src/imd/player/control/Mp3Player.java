@@ -39,21 +39,21 @@ public final class Mp3Player implements Runnable {
     public void run() {
         try {
             this.player.play();
-        } catch (JavaLayerException ex) {
-            Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void start(File music) throws InterruptedException, FileNotFoundException, JavaLayerException {
         bis = new BufferedInputStream(new FileInputStream(music));
-        if (thread_t != null) {
-            if (thread_t.isAlive()) {
+        if (this.thread_t != null) {
+            if (this.thread_t.isAlive()) {
                 this.player.close();
             }
         }
         this.player = new AdvancedPlayer(bis);
-        thread_t = new Thread(this, "mp3Player");
-        thread_t.start();
+        this.thread_t = new Thread(this, "mp3Player");
+        this.thread_t.start();
         this.playing = true;
     }
 
@@ -85,8 +85,8 @@ public final class Mp3Player implements Runnable {
     public BufferedInputStream getStream() {
         return this.bis;
     }
-    
-    public AdvancedPlayer getPlayer(){
+
+    public AdvancedPlayer getPlayer() {
         return this.player;
     }
 }
