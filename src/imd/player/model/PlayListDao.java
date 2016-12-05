@@ -38,7 +38,9 @@ public class PlayListDao implements DaoInterface {
                 reader = new BufferedReader(new FileReader(playlist));
                 playlistName = reader.readLine();
                 playlistId = reader.readLine();
-                this.playlists.put(playlistId, new ArrayList<>());
+                if(!this.playlists.containsKey(playlistId)){
+                    this.playlists.put(playlistId, new ArrayList<>());
+                }
                 innerPlaylist = new Playlist(playlistName);
                 while (reader.ready()) {
                     innerPlaylist.addMusic(new Music(new File(reader.readLine())));
@@ -77,7 +79,7 @@ public class PlayListDao implements DaoInterface {
                     writer.write(toBeSaved.getName() + "\n");
                     writer.write(id + "\n");
                     for (Music toBeSavedMusic : toBeSaved.getMusics()) {
-                        writer.write(toBeSavedMusic.getName() + "\n");
+                        writer.write(toBeSavedMusic.getMusicFile() + "\n");
                     }
                     writer.close();
                 } catch (Exception e) {
