@@ -1,7 +1,5 @@
 package imd.player.control;
 
-import java.util.ArrayList;
-
 public class VipUser extends User{
     
     public VipUser(String login, String password) {

@@ -17,47 +17,47 @@ import javazoom.jl.decoder.JavaLayerException;
 public class MusicControl implements Runnable {
 
     /**
-     * Makes an backup of the playlist that will be played
+     * Makes an backup of the playlist that will be played.
      */
     private Playlist playlist;
    
     /**
-     * Saves if the user wants to play the next music
+     * Saves if the user wants to play the next music.
      */
     private boolean playNextMusic = false;
     
     /**
-     * Saves if the user wants to play the back music
+     * Saves if the user wants to play the back music.
      */
     private boolean playBackMusic = false;
     
     /**
-     * Saves if the user wants to stop the music reproduction
+     * Saves if the user wants to stop the music reproduction.
      */
     private boolean stop = false;
     
     /**
-     * Object responsible for create an thread for control of the progressBar
+     * Object responsible for create an thread for control of the progressBar.
      */
     private final ProgressBarControl progressBarControl;
     
     /**
-     * Makes an backup of the {@link JProgressBar} that must receive the state of the music
+     * Makes an backup of the {@link JProgressBar} that must receive the state of the music.
      */
     private javax.swing.JProgressBar progressBar;
     
     /**
-     * Makes an backup of the {@link JLabel} that must receive the name of the playing music
+     * Makes an backup of the {@link JLabel} that must receive the name of the playing music.
      */
     private javax.swing.JLabel musicLabel;
     
     /**
-     * Thread responsible for start the MusicControl thread, that must execute an playlist in sequence
+     * Thread responsible for start the MusicControl thread, that must execute an playlist in sequence.
      */
     private Thread musics;
 
     /**
-     * Initialize the {@link ProgressBarControl} that must control the progress of the {@link JProgressBar}
+     * Initialize the {@link ProgressBarControl} that must control the progress of the {@link JProgressBar}.
      */
     public MusicControl() {
         progressBarControl = new ProgressBarControl();
@@ -151,11 +151,11 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * 
-     * @param user
-     * @param musicsNames
-     * @param playlistName
-     * @return 
+     * Create a new playlist for the specified vip User
+     * @param user Receives the vip User that will receive the new playlist
+     * @param musicsNames Receives an {@link ArrayList} of {@link String} that must be used to create the new playlist
+     * @param playlistName Receives the name of the new playlist
+     * @return Returns true if the playlist was successfully added, return false if the playlist already exist on the system
      */
     public boolean createPlaylist(VipUser user, ArrayList<String> musicsNames, String playlistName) {
         try {
@@ -179,8 +179,8 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * 
-     * @param directory 
+     * Adds songs within a directory passed to the system
+     * @param directory Receives the folder of the musics
      */
     public void addDirectory(File directory) {
         String musicName;
@@ -197,11 +197,11 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * 
-     * @param playlistName
-     * @param user
-     * @param progressBar
-     * @param musicLabel
+     * Play a playlist by receiving the name of the playlist, vip User, {@link JProgressBar} and {@link JLabel}
+     * @param playlistName Receives the playlist name
+     * @param user Receives the vip User, owner of the playlist
+     * @param progressBar Receives the {@link JProgressBar} that will be saved in backup
+     * @param musicLabel Receives the {@link JLabel} that will be saved in backup
      * @throws InterruptedException 
      */
     public void playMusics(String playlistName, VipUser user, javax.swing.JProgressBar progressBar, javax.swing.JLabel musicLabel) throws InterruptedException {
@@ -221,14 +221,14 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * Play the next music
+     * Saves that the user wants to play the next music
      */
     public void nextMusic() {
         this.playNextMusic = true;
     }
 
     /**
-     * Play the back music
+     * Saves that the user wants to play the back music
      */
     public void backMusic() {
         this.playBackMusic = true;
@@ -237,7 +237,7 @@ public class MusicControl implements Runnable {
     /**
      * Pause or play music
      *
-     * @return return true is the music is paused and false otherwise
+     * @return Returns true if the music is paused, returns false otherwise
      */
     public boolean pausePlayMusic() {
         Mp3Player.getInstance().playPause();
@@ -245,10 +245,9 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * Stops the playing music
+     * Saves that the user wants to stop the playlist and stop the actual music playing Thread
      *
-     * @return return true if the music was successful stopped and false
-     * otherwise
+     * @return Returns true if the music and/or playlist was successful stopped, returns false otherwise
      */
     public boolean stopMusic() {
         if (Mp3Player.getInstance().getThread_t() != null) {
@@ -264,8 +263,8 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * 
-     * @return 
+     * Returns an array containing all the musics names from the system
+     * @return Returns an {@link ArrayList} of {@link String} with all the musics names
      */
     public ArrayList<String> getMusicNames() {
         ArrayList<String> musicNames = new ArrayList<>();
@@ -280,7 +279,8 @@ public class MusicControl implements Runnable {
     }
 
     /**
-     * Method responsible for the thread action of play several musics
+     * Method responsible for the thread action of play several musics, as for the call of {@link ProgressBarControl}.
+     * If the tokens playNextMusic, playBackMusic or stopMusic are true, then this thread must treat this cases.
      */
     @Override
     public void run() {

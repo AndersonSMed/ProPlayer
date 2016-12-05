@@ -1,10 +1,7 @@
 package imd.player.control;
 
 import imd.player.model.ModelFacade;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
