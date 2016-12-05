@@ -62,20 +62,6 @@ public class UserControl {
         return false;
     }
 
-    public ArrayList<String> getAllUsersLogins() {
-        ArrayList<String> usersLogin = new ArrayList<>();
-        if (this.isAdmin()) {
-            try {
-                for (User user : ModelFacade.getInstance().getAllUsers()) {
-                    usersLogin.add(user.getLogin());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return usersLogin;
-    }
-
     public void addPlaylist(String name, ArrayList<Music> musics) {
         if (this.isAdmin()) {
             try {
