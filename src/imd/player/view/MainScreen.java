@@ -1,13 +1,9 @@
 package imd.player.view;
 
 import imd.player.control.ControlFacade;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javazoom.jl.decoder.JavaLayerException;
 
 public class MainScreen extends javax.swing.JFrame {
     
