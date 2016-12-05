@@ -8,11 +8,9 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 
 /**
- *
+ * Implements a Mp3 Player using parallel programming, to do so we use the JLayer library and it's classes
+ * 
  * @author Anderson e Yuri Reinaldo
- *
- * Implements a Mp3 Player using parallel programming, to do so we use the
- * JLayer library and it's classes
  */
 public final class Mp3Player implements Runnable {
 

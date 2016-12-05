@@ -1,0 +1,3 @@
+/home/anderson/musics.txt
+/home/anderson/playlist/
+/home/anderson/user.txt
