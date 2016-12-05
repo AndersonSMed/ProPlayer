@@ -81,7 +81,9 @@ public class PlayListDao implements DaoInterface {
                     writer.write(toBeSaved.getName() + "\n");
                     writer.write(id + "\n");
                     for (Music toBeSavedMusic : toBeSaved.getMusics()) {
+                        
                         writer.write(toBeSavedMusic.getMusicFile().getAbsolutePath() + "\n");
+
                     }
                     writer.close();
                 } catch (Exception e) {
